@@ -1,23 +1,57 @@
 {
-  "name": "nextjs",
-  "version": "0.1.0",
+  "name": "tml-collect",
+  "version": "1.0.0",
+  "description": "TML Collect - Tomorrowland DJ Card Collection App",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "backend": "cd backend && npm run dev",
+    "scraper": "cd scraper && python main.py",
+    "setup": "npm install && cd backend && npm install && cd ../scraper && pip install -r requirements.txt",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel",
+    "build:vercel": "next build"
   },
   "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "^7.4.3",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/auth-helpers-react": "^0.5.0",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.56.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^10.18.0",
+    "lucide-react": "^0.294.0",
+    "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.5.2"
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
-  }
+    "eslint": "^8",
+    "eslint-config-next": "15.5.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "keywords": [
+    "tomorrowland",
+    "dj",
+    "cards",
+    "collection",
+    "nextjs",
+    "react"
+  ],
+  "author": "TML Collect Team",
+  "license": "MIT"
 }
