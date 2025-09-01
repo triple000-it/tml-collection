@@ -1,4 +1,4 @@
-# TML Collect - Tomorrowland DJ Card Collection App
+# TML Collect - DJ Card Collection App - Tomorrowland DJ Card Collection App
 
 A premium, modern collectible card app focused on DJs who have played at Tomorrowland. Built with Next.js 15, Supabase, and Capacitor.js for a seamless cross-platform experience with a stunning dark Tomorrowland aesthetic.
 
