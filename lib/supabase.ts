@@ -13,7 +13,7 @@ export interface DJ {
   biography?: string
   nationality: string
   genres: string[]
-  social_links: Record<string, any>
+  social_links: Record<string, string>
   debut_year: number
   total_appearances: number
   years_active: number

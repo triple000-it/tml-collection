@@ -9,7 +9,7 @@ interface RegisterFormProps {
   onClose?: () => void;
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleMode, onClose }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleMode }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',

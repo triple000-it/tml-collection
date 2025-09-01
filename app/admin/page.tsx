@@ -137,7 +137,7 @@ export default function AdminPage() {
       const fileInput = document.getElementById('image-upload') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
 
-    } catch (error) {
+    } catch {
       setUploadStatus('error');
       setUploadMessage('Failed to upload image. Please try again.');
     } finally {

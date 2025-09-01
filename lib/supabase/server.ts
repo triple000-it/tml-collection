@@ -5,7 +5,7 @@ export const createClient = () => {
   try {
     const cookieStore = cookies()
     return createServerComponentClient({ cookies: () => cookieStore })
-  } catch (error) {
+  } catch {
     // Return a mock client for build time
     return {
       auth: {

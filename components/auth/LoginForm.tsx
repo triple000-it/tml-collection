@@ -138,7 +138,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onClose }) => {
         {/* Toggle to Register */}
         <div className="mt-8 text-center">
           <p className="text-gray-400">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <button
               onClick={onToggleMode}
               className="text-white hover:text-gray-300 font-medium transition-colors"

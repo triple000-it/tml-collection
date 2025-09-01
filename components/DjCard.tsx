@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Crown, Zap, Star, Sparkles, Music, Calendar, MapPin, Award, Users, Disc, ChevronRight } from 'lucide-react';
+import { Crown, Zap, Star, Sparkles, MapPin, ChevronRight } from 'lucide-react';
 
 interface DjData {
   id: string;
@@ -38,11 +38,11 @@ const DjCard: React.FC<DjCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [internalFlipped, setInternalFlipped] = useState(false);
   
-  const flipped = onFlip !== undefined ? isFlipped : internalFlipped;
+  const isFlippedState = onFlip !== undefined ? isFlipped : internalFlipped;
   
   const handleFlip = () => {
     if (onFlip) {
-      onFlip(!isFlipped);
+      onFlip(!isFlippedState);
     } else {
       setInternalFlipped(!internalFlipped);
     }

@@ -31,7 +31,7 @@ export default function HomePage() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
 
   // Mock data for demonstration
   const mockDjs: DjData[] = [
