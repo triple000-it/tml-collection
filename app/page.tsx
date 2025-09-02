@@ -192,10 +192,12 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                <span className="text-black font-bold text-lg">T</span>
-              </div>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/Favicon-White.png" 
+                alt="TML Collections Logo" 
+                className="w-10 h-10"
+              />
               <span className="text-white font-bold text-xl">TML COLLECTIONS</span>
             </div>
 
@@ -406,10 +408,12 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center space-y-4">
             {/* Logo */}
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                <span className="text-black font-bold text-lg">T</span>
-              </div>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/Favicon-White.png" 
+                alt="TML Collections Logo" 
+                className="w-12 h-12"
+              />
               <span className="text-2xl font-bold text-white">TML Collections</span>
             </div>
             

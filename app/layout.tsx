@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     siteName: 'TML Collections',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/favicon-32x32.png',
         width: 1200,
         height: 630,
         alt: 'TML Collections - Tomorrowland DJ Cards',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'TML Collections - Tomorrowland DJ Card Collection',
     description: 'Collect digital cards of your favorite Tomorrowland DJs',
-    images: ['/og-image.jpg'],
+    images: ['/favicon-32x32.png'],
   },
   robots: {
     index: true,
