@@ -47,9 +47,32 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
     const audio = audioRef.current;
     if (audio) {
       audio.src = STREAM_URL;
+      audio.volume = 1; // Set initial volume to 100%
       audio.load();
     }
   }, []);
+
+  // Ensure volume is properly set when audio loads
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      const handleCanPlay = () => {
+        audio.volume = volume;
+      };
+      
+      const handleLoadedData = () => {
+        audio.volume = volume;
+      };
+      
+      audio.addEventListener('canplay', handleCanPlay);
+      audio.addEventListener('loadeddata', handleLoadedData);
+      
+      return () => {
+        audio.removeEventListener('canplay', handleCanPlay);
+        audio.removeEventListener('loadeddata', handleLoadedData);
+      };
+    }
+  }, [volume]);
 
   // Handle play/pause
   const togglePlayPause = async () => {
@@ -71,11 +94,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
   };
 
   // Handle volume change
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement> | React.FormEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    const newVolume = parseFloat(target.value);
     setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
+    const audio = audioRef.current;
+    if (audio) {
+      // Force volume update
+      audio.volume = newVolume;
+      // Double-check and force again if needed
+      setTimeout(() => {
+        if (audio && audio.volume !== newVolume) {
+          audio.volume = newVolume;
+        }
+      }, 10);
     }
     setIsMuted(newVolume === 0);
   };
@@ -86,9 +118,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
     if (!audio) return;
 
     if (isMuted) {
+      // Unmute: restore previous volume
       audio.volume = volume;
       setIsMuted(false);
     } else {
+      // Mute: set volume to 0
       audio.volume = 0;
       setIsMuted(true);
     }
@@ -188,7 +222,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
             step="0.1"
             value={isMuted ? 0 : volume}
             onChange={handleVolumeChange}
+            onInput={handleVolumeChange}
             className="w-16 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
+            style={{ touchAction: 'none' }}
           />
         </div>
       </div>
