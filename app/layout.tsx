@@ -16,29 +16,29 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'TML Collect - Tomorrowland DJ Card Collection',
+  title: 'TML Collections - Tomorrowland DJ Card Collection',
   description: 'Collect digital cards of your favorite Tomorrowland DJs. Discover, collect, and trade premium DJ cards from the world\'s greatest electronic music festival.',
   keywords: ['Tomorrowland', 'DJ Cards', 'Electronic Music', 'Festival', 'Collection', 'Trading Cards'],
-  authors: [{ name: 'TML Collect Team' }],
-  creator: 'TML Collect',
-  publisher: 'TML Collect',
+  authors: [{ name: 'TML Collections Team' }],
+  creator: 'TML Collections',
+  publisher: 'TML Collections',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://tml-collect.com'),
+  metadataBase: new URL('https://tml-collections.com'),
   openGraph: {
-    title: 'TML Collect - Tomorrowland DJ Card Collection',
+    title: 'TML Collections - Tomorrowland DJ Card Collection',
     description: 'Collect digital cards of your favorite Tomorrowland DJs',
-    url: 'https://tml-collect.com',
-    siteName: 'TML Collect',
+    url: 'https://tml-collections.com',
+    siteName: 'TML Collections',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'TML Collect - Tomorrowland DJ Cards',
+        alt: 'TML Collections - Tomorrowland DJ Cards',
       },
     ],
     locale: 'en_US',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TML Collect - Tomorrowland DJ Card Collection',
+    title: 'TML Collections - Tomorrowland DJ Card Collection',
     description: 'Collect digital cards of your favorite Tomorrowland DJs',
     images: ['/og-image.jpg'],
   },
@@ -80,7 +80,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#000000" />
-        <meta name="copyright" content="©2025 TML Collect" />
+        <meta name="copyright" content="©2025 TML Collections" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </head>
       <body className="font-inter bg-black text-white antialiased overflow-x-hidden">

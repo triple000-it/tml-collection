@@ -1,7 +1,7 @@
 {
-  "name": "tml-collect",
+  "name": "tml-collections",
   "version": "1.0.0",
-  "description": "TML Collect - Tomorrowland DJ Card Collection App",
+  "description": "TML Collections - Tomorrowland DJ Card Collection App",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -22,7 +22,7 @@
     "lucide-react": "^0.294.0",
     "next": "15.5.2",
     "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react-dom": "^18.3.1",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
@@ -43,6 +43,6 @@
     "nextjs",
     "react"
   ],
-  "author": "TML Collect Team",
+  "author": "TML Collections Team",
   "license": "MIT"
 }

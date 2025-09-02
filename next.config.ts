@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   
   // Environment variables
   env: {
-    NEXT_PUBLIC_APP_NAME: 'TML Collect',
+    NEXT_PUBLIC_APP_NAME: 'TML Collections',
     NEXT_PUBLIC_APP_VERSION: '1.0.0',
   },
   

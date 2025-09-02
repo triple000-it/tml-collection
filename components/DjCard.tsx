@@ -13,6 +13,7 @@ interface DjData {
   total_appearances: number;
   years_active: number;
   image_url?: string;
+  back_image_url?: string;
   rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
   biography?: string;
   debut_year: number;
@@ -124,7 +125,7 @@ const DjCard: React.FC<DjCardProps> = ({
       </div>
 
       {/* Main Image */}
-      <div className="relative h-64 bg-gray-900">
+      <div className="relative h-80 bg-gray-900">
         {djData.image_url ? (
           <Image
             src={djData.image_url}
@@ -142,10 +143,7 @@ const DjCard: React.FC<DjCardProps> = ({
         {/* Image Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
         
-        {/* Floating crystal effect for legendary cards */}
-        {djData.rarity === 'LEGENDARY' && (
-          <div className="absolute top-2 left-2 w-3 h-3 bg-yellow-400 rounded-full animate-pulse shadow-lg shadow-yellow-400/50"></div>
-        )}
+
       </div>
 
       {/* Card Content */}

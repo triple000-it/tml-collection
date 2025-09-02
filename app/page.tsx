@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import DjCard from '@/components/DjCard';
+import SpinningCard from '@/components/SpinningCard';
+import AudioPlayer from '@/components/AudioPlayer';
 import AuthModal from '@/components/auth/AuthModal';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
-import { ChevronDown, User, Search, Filter, Calendar, Play } from 'lucide-react';
+import { ChevronDown, User, Search, Filter, Calendar } from 'lucide-react';
 
 interface DjData {
   id: string;
@@ -16,6 +18,7 @@ interface DjData {
   total_appearances: number;
   years_active: number;
   image_url?: string;
+  back_image_url?: string;
   rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
   biography?: string;
   debut_year: number;
@@ -42,7 +45,8 @@ export default function HomePage() {
       genres: ['Big Room', 'Progressive House', 'Electro House', 'Future Rave'],
       total_appearances: 15,
       years_active: 14,
-      image_url: '/dj-images/dvlm.jpg',
+      image_url: '/cards/test-front.png',
+      back_image_url: '/cards/test-back.png',
       rarity: 'LEGENDARY',
       biography: 'Belgian DJ duo and brothers known for their explosive energy and Tomorrowland residency. They have headlined major festivals worldwide and are recognized for their crowd interaction and festival anthems.',
       debut_year: 2010,
@@ -184,7 +188,7 @@ export default function HomePage() {
               <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                 <span className="text-black font-bold text-lg">T</span>
               </div>
-              <span className="text-white font-bold text-xl">TML COLLECT</span>
+              <span className="text-white font-bold text-xl">TML COLLECTIONS</span>
             </div>
 
             {/* Navigation Links */}
@@ -328,49 +332,55 @@ export default function HomePage() {
               <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
             </div>
           </div>
+        </div>
 
-          {/* Loading State */}
-          {loading && (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-            </div>
-          )}
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+          </div>
+        )}
 
-          {/* DJ Cards Grid */}
-          {!loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {/* DJ Cards Grid - Full Width */}
+        {!loading && (
+          <div className="w-full mt-16">
+            <div className="dj-grid">
               {filteredDjs.map((dj, index) => (
                 <div 
                   key={dj.id} 
                   className="card-hover"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <DjCard djData={dj} />
+                  {dj.id === 'dimitri-vegas-like-mike' ? (
+                    <SpinningCard djData={dj} />
+                  ) : (
+                    <DjCard djData={dj} />
+                  )}
                 </div>
               ))}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Empty State */}
-          {!loading && filteredDjs.length === 0 && (
-            <div className="text-center py-20">
-              <div className="text-8xl mb-6">🎵</div>
-              <h3 className="text-2xl font-bold text-white mb-4">No DJs Found</h3>
-              <p className="text-gray-400 mb-8">
-                Try adjusting your search or filter criteria
-              </p>
-              <button 
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedRarity('ALL');
-                }}
-                className="button-primary"
-              >
-                Clear Filters
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Empty State */}
+        {!loading && filteredDjs.length === 0 && (
+          <div className="text-center py-20">
+            <div className="text-8xl mb-6">🎵</div>
+            <h3 className="text-2xl font-bold text-white mb-4">No DJs Found</h3>
+            <p className="text-gray-400 mb-8">
+              Try adjusting your search or filter criteria
+            </p>
+            <button 
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedRarity('ALL');
+              }}
+              className="button-primary"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
       </section>
 
       {/* Footer */}
@@ -381,10 +391,10 @@ export default function HomePage() {
               <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                 <span className="text-black font-bold text-lg">T</span>
               </div>
-              <span className="text-2xl font-bold text-white">TML Collect</span>
+              <span className="text-2xl font-bold text-white">TML Collections</span>
             </div>
             <p className="text-gray-400 mb-4">
-              &copy; 2025 TML Collect. All rights reserved.
+              &copy; 2025 TML Collections. All rights reserved.
             </p>
             <p className="text-gray-500 text-sm">
               This is a fan-made project and is not affiliated with Tomorrowland.
@@ -393,22 +403,9 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* One World Radio Banner */}
-      <div className="fixed bottom-4 left-4 z-50">
-        <div className="bg-gradient-to-r from-purple-600 to-orange-500 rounded-lg p-3 flex items-center space-x-3 shadow-lg">
-          <button className="text-white hover:text-gray-200 transition-colors">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
-          <div className="flex items-center space-x-2">
-            <Play className="w-4 h-4 text-white" />
-            <span className="text-white font-bold text-sm">ONE WORLD RADIO</span>
-            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-              <span className="text-black font-bold text-xs">T</span>
-            </div>
-          </div>
-        </div>
+      {/* Audio Player */}
+      <div className="fixed bottom-4 left-4 right-4 z-50 max-w-4xl mx-auto">
+        <AudioPlayer />
       </div>
 
       {/* Auth Modal */}

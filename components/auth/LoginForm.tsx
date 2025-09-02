@@ -50,7 +50,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onClose }) => {
       <div className="bg-black border border-gray-800 rounded-2xl p-8">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
-          <p className="text-gray-400">Sign in to your TML Collect account</p>
+          <p className="text-gray-400">Sign in to your TML Collections account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

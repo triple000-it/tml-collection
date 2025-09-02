@@ -12,7 +12,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (!loading && user) {
       // Check if user is admin
-      const isAdmin = user.user_metadata?.role === 'admin' || user.email === 'admin@tmlcollect.com';
+      const isAdmin = user.user_metadata?.role === 'admin' || user.email === 'admin@tmlcollections.com';
       if (isAdmin) {
         router.push('/admin');
       } else {
@@ -44,7 +44,7 @@ export default function LoginPage() {
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-black font-bold text-2xl">T</span>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">TML Collect</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">TML Collections</h1>
           <p className="text-gray-400">Sign in to your account</p>
         </div>
         

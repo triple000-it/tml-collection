@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Upload, User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { Upload, User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Image as ImageIcon, Radio, Save } from 'lucide-react';
 import AdminGuard from '@/components/auth/AdminGuard';
 
 interface DjData {
@@ -26,6 +26,12 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [uploadMessage, setUploadMessage] = useState('');
+  const [activeTab, setActiveTab] = useState<'upload' | 'settings'>('upload');
+  const [streamUrl, setStreamUrl] = useState('https://playerservices.streamtheworld.com/api/livestream-redirect/OWR_INTERNATIONALAAC.aac');
+  const [streamTitle, setStreamTitle] = useState('Tomorrowland Radio');
+  const [savingSettings, setSavingSettings] = useState(false);
+  const [settingsStatus, setSettingsStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [settingsMessage, setSettingsMessage] = useState('');
 
   // Mock DJ data
   const djs: DjData[] = [
@@ -146,6 +152,32 @@ export default function AdminPage() {
     }
   };
 
+  const handleSaveSettings = async () => {
+    if (!streamUrl.trim() || !streamTitle.trim()) {
+      setSettingsStatus('error');
+      setSettingsMessage('Please fill in all required fields.');
+      return;
+    }
+
+    setSavingSettings(true);
+    setSettingsStatus('idle');
+
+    try {
+      // Simulate API call to save settings
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Mock successful save
+      setSettingsStatus('success');
+      setSettingsMessage('Stream settings saved successfully!');
+
+    } catch {
+      setSettingsStatus('error');
+      setSettingsMessage('Failed to save settings. Please try again.');
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
   const selectedDjData = djs.find(dj => dj.id === selectedDj);
 
   const getRarityColor = (rarity: string) => {
@@ -192,10 +224,6 @@ export default function AdminPage() {
                 <User className="w-4 h-4" />
                 <span className="text-sm">Admin User</span>
               </div>
-              <button className="premium-button-secondary flex items-center space-x-2">
-                <Settings className="w-4 h-4" />
-                <span>Settings</span>
-              </button>
             </div>
           </div>
         </div>
@@ -204,20 +232,57 @@ export default function AdminPage() {
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="premium-card rounded-3xl p-8">
+          {/* Tab Navigation */}
           <div className="flex items-center space-x-3 mb-8">
             <div className="w-12 h-12 bg-gradient-to-br from-tml-purple to-tml-magenta rounded-xl flex items-center justify-center">
-              <Upload className="w-6 h-6 text-white" />
+              {activeTab === 'upload' ? <Upload className="w-6 h-6 text-white" /> : <Settings className="w-6 h-6 text-white" />}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Upload DJ Image</h1>
-              <p className="text-tml-gray-400">Manage and upload images for Tomorrowland DJs</p>
+              <h1 className="text-3xl font-bold text-white">
+                {activeTab === 'upload' ? 'Upload DJ Image' : 'Stream Settings'}
+              </h1>
+              <p className="text-tml-gray-400">
+                {activeTab === 'upload' ? 'Manage and upload images for Tomorrowland DJs' : 'Configure audio stream settings'}
+              </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left Column - Form */}
-            <div className="space-y-8">
-              {/* DJ Selection */}
+          {/* Tab Buttons */}
+          <div className="flex space-x-2 mb-8">
+            <button
+              onClick={() => setActiveTab('upload')}
+              className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                activeTab === 'upload'
+                  ? 'premium-button'
+                  : 'bg-tml-dark-bg/50 text-tml-gray-400 hover:text-white hover:bg-tml-dark-bg/70'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <Upload className="w-4 h-4" />
+                <span>DJ Images</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                activeTab === 'settings'
+                  ? 'premium-button'
+                  : 'bg-tml-dark-bg/50 text-tml-gray-400 hover:text-white hover:bg-tml-dark-bg/70'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <Radio className="w-4 h-4" />
+                <span>Stream Settings</span>
+              </div>
+            </button>
+          </div>
+
+          {/* Upload Tab Content */}
+          {activeTab === 'upload' && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Form */}
+              <div className="space-y-8">
+                {/* DJ Selection */}
               <div>
                 <label className="block text-tml-gray-300 text-sm font-medium mb-3">
                   Select DJ
@@ -402,6 +467,143 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
+          )}
+
+          {/* Settings Tab Content */}
+          {activeTab === 'settings' && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Settings Form */}
+              <div className="space-y-8">
+                {/* Stream URL */}
+                <div>
+                  <label className="block text-tml-gray-300 text-sm font-medium mb-3">
+                    Stream URL
+                  </label>
+                  <input
+                    type="url"
+                    value={streamUrl}
+                    onChange={(e) => setStreamUrl(e.target.value)}
+                    placeholder="Enter streaming URL..."
+                    className="w-full px-4 py-4 bg-tml-dark-bg/50 border border-tml-dark-border rounded-xl text-white placeholder-tml-gray-400 focus:outline-none focus:border-tml-purple focus:ring-2 focus:ring-tml-purple/20 transition-all duration-300"
+                  />
+                  <p className="text-tml-gray-400 text-xs mt-2">
+                    Direct audio stream URL (supports AAC, MP3, OGG formats)
+                  </p>
+                </div>
+
+                {/* Stream Title */}
+                <div>
+                  <label className="block text-tml-gray-300 text-sm font-medium mb-3">
+                    Stream Title
+                  </label>
+                  <input
+                    type="text"
+                    value={streamTitle}
+                    onChange={(e) => setStreamTitle(e.target.value)}
+                    placeholder="Enter stream title..."
+                    className="w-full px-4 py-4 bg-tml-dark-bg/50 border border-tml-dark-border rounded-xl text-white placeholder-tml-gray-400 focus:outline-none focus:border-tml-purple focus:ring-2 focus:ring-tml-purple/20 transition-all duration-300"
+                  />
+                  <p className="text-tml-gray-400 text-xs mt-2">
+                    Display name for the audio stream
+                  </p>
+                </div>
+
+                {/* Save Button */}
+                <button
+                  onClick={handleSaveSettings}
+                  disabled={savingSettings || !streamUrl.trim() || !streamTitle.trim()}
+                  className={`w-full py-4 px-6 rounded-xl font-medium transition-all duration-300 ${
+                    savingSettings || !streamUrl.trim() || !streamTitle.trim()
+                      ? 'bg-tml-gray-600 text-tml-gray-400 cursor-not-allowed'
+                      : 'premium-button'
+                  }`}
+                >
+                  {savingSettings ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      <span>Saving...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center space-x-2">
+                      <Save className="w-5 h-5" />
+                      <span>Save Settings</span>
+                    </div>
+                  )}
+                </button>
+              </div>
+
+              {/* Right Column - Settings Info */}
+              <div className="space-y-6">
+                {/* Current Settings Preview */}
+                <div className="premium-card rounded-2xl p-6">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center space-x-2">
+                    <Radio className="w-5 h-5" />
+                    <span>Current Settings</span>
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    <div className="bg-tml-dark-bg/50 rounded-lg p-4">
+                      <p className="text-tml-gray-400 text-xs mb-2">Stream Title</p>
+                      <p className="text-white font-medium">{streamTitle}</p>
+                    </div>
+                    <div className="bg-tml-dark-bg/50 rounded-lg p-4">
+                      <p className="text-tml-gray-400 text-xs mb-2">Stream URL</p>
+                      <p className="text-white font-mono text-sm break-all">{streamUrl}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Settings Status */}
+                {settingsStatus !== 'idle' && (
+                  <div className={`premium-card rounded-2xl p-6 ${
+                    settingsStatus === 'success' 
+                      ? 'border-green-500/30 bg-green-500/5' 
+                      : 'border-red-500/30 bg-red-500/5'
+                  }`}>
+                    <div className="flex items-center space-x-3">
+                      {settingsStatus === 'success' ? (
+                        <CheckCircle className="w-6 h-6 text-green-400" />
+                      ) : (
+                        <AlertCircle className="w-6 h-6 text-red-400" />
+                      )}
+                      <p className={`font-medium ${
+                        settingsStatus === 'success' ? 'text-green-400' : 'text-red-400'
+                      }`}>
+                        {settingsMessage}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Settings Guidelines */}
+                <div className="premium-card rounded-2xl p-6">
+                  <h3 className="text-lg font-bold text-white mb-4">Stream Guidelines</h3>
+                  <ul className="space-y-2 text-tml-gray-400 text-sm">
+                    <li className="flex items-start space-x-2">
+                      <div className="w-1.5 h-1.5 bg-tml-purple rounded-full mt-2 flex-shrink-0"></div>
+                      <span>Use direct audio stream URLs (not YouTube or video platforms)</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <div className="w-1.5 h-1.5 bg-tml-purple rounded-full mt-2 flex-shrink-0"></div>
+                      <span>Supported formats: AAC, MP3, OGG, M3U playlists</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <div className="w-1.5 h-1.5 bg-tml-purple rounded-full mt-2 flex-shrink-0"></div>
+                      <span>Ensure the stream URL is publicly accessible</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <div className="w-1.5 h-1.5 bg-tml-purple rounded-full mt-2 flex-shrink-0"></div>
+                      <span>Changes take effect immediately after saving</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <div className="w-1.5 h-1.5 bg-tml-purple rounded-full mt-2 flex-shrink-0"></div>
+                      <span>Test the stream URL before saving to ensure it works</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
       </div>
