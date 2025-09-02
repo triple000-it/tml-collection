@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Upload, User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import AdminGuard from '@/components/auth/AdminGuard';
 
 interface DjData {
   id: string;
@@ -157,7 +158,8 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-tml-dark-bg">
+    <AdminGuard>
+      <div className="min-h-screen bg-tml-dark-bg">
       {/* Premium Header */}
       <header className="glass-effect border-b border-tml-dark-border/30 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -402,6 +404,7 @@ export default function AdminPage() {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </AdminGuard>
   );
 }

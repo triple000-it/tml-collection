@@ -237,7 +237,7 @@ export default function HomePage() {
         {/* Hero Content */}
         <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Collect Tomorrowland DJ Cards
+            Collect All Tomorrowland DJ Cards
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Discover, collect, and trade premium digital cards of your favorite Tomorrowland artists.

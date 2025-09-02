@@ -1,14 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable static export for Vercel
-  output: 'export',
+  // Remove static export to enable Supabase client-side functionality
   trailingSlash: true,
   
-  // Image optimization for Vercel
+  // Image optimization
   images: {
-    unoptimized: true,
-    domains: ['your-supabase-project.supabase.co'],
+    domains: ['ngquunzrscytljlzufpu.supabase.co'],
   },
   
   // Environment variables
@@ -22,7 +20,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['framer-motion']
   },
   
-  // Note: Headers and redirects are handled by vercel.json for static export
+  // Note: Headers and redirects can be handled by middleware or API routes
   
   // Webpack configuration
   webpack: (config, { isServer }) => {

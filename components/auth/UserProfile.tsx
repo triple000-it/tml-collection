@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { User, LogOut, Settings, Crown, Star, Gift } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { User, LogOut, Settings, Crown, Star, Gift, Shield } from 'lucide-react';
 
 interface UserProfileProps {
   onClose?: () => void;
@@ -10,7 +11,11 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ onClose }) => {
   const { user, signOut } = useAuth();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  // Check if user is admin
+  const isAdmin = user?.user_metadata?.role === 'admin' || user?.email === 'admin@tmlcollect.com';
 
   const handleSignOut = async () => {
     await signOut();
@@ -52,6 +57,20 @@ const UserProfile: React.FC<UserProfileProps> = ({ onClose }) => {
 
           {/* Menu Items */}
           <div className="py-2">
+            {/* Admin Panel - Only show for admin users */}
+            {isAdmin && (
+              <button 
+                onClick={() => {
+                  router.push('/admin');
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-2 text-yellow-400 hover:bg-yellow-400/10 transition-colors"
+              >
+                <Shield className="w-5 h-5" />
+                <span>Admin Panel</span>
+              </button>
+            )}
+            
             <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
               <Settings className="w-5 h-5" />
               <span>Settings</span>
