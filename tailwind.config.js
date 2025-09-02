@@ -12,17 +12,17 @@ module.exports = {
         // Primary Tomorrowland Colors
         'tml': {
           // Deep purples and magentas (main brand colors)
-          'purple': '#6B46C1',        // Primary purple
-          'purple-dark': '#553C9A',   // Darker purple
-          'purple-light': '#8B5CF6',  // Lighter purple
+          'purple': '#581C87',        // Dark purple (purple-900)
+          'purple-dark': '#4C1D95',   // Darker purple
+          'purple-light': '#7C3AED',  // Lighter purple
           'magenta': '#EC4899',       // Tomorrowland magenta
           'magenta-dark': '#DB2777',  // Darker magenta
           'magenta-light': '#F472B6', // Lighter magenta
           
           // Blues and teals
-          'blue': '#3B82F6',          // Electric blue
-          'blue-dark': '#1D4ED8',     // Darker blue
-          'blue-light': '#60A5FA',    // Lighter blue
+          'blue': '#1E3A8A',          // Dark blue (blue-900)
+          'blue-dark': '#1E40AF',     // Darker blue
+          'blue-light': '#3B82F6',    // Lighter blue
           'teal': '#14B8A6',          // Teal accent
           'teal-dark': '#0F766E',     // Darker teal
           
@@ -75,8 +75,8 @@ module.exports = {
       
       // Tomorrowland Gradients
       backgroundImage: {
-        'tml-gradient': 'linear-gradient(135deg, #6B46C1 0%, #EC4899 50%, #3B82F6 100%)',
-        'tml-gradient-dark': 'linear-gradient(135deg, #553C9A 0%, #DB2777 50%, #1D4ED8 100%)',
+        'tml-gradient': 'linear-gradient(135deg, #581C87 0%, #EC4899 50%, #1E3A8A 100%)',
+        'tml-gradient-dark': 'linear-gradient(135deg, #4C1D95 0%, #DB2777 50%, #1E40AF 100%)',
         'legendary-gradient': 'linear-gradient(135deg, #F59E0B 0%, #FCD34D 50%, #F59E0B 100%)',
         'epic-gradient': 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #8B5CF6 100%)',
         'rare-gradient': 'linear-gradient(135deg, #3B82F6 0%, #14B8A6 50%, #3B82F6 100%)',
@@ -168,7 +168,7 @@ module.exports = {
     function({ addUtilities }) {
       const newUtilities = {
         '.text-tml-gradient': {
-          'background': 'linear-gradient(135deg, #6B46C1 0%, #EC4899 50%, #3B82F6 100%)',
+          'background': 'linear-gradient(135deg, #581C87 0%, #EC4899 50%, #1E3A8A 100%)',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',
           'background-clip': 'text',

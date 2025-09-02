@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Music, Loader2 } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Loader2 } from 'lucide-react';
 
 interface AudioPlayerProps {
   className?: string;
@@ -15,6 +15,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
+  const [genre, setGenre] = useState<string>('');
   
   // Hardcoded stream URL
   const STREAM_URL = 'https://playerservices.streamtheworld.com/api/livestream-redirect/OWR_INTERNATIONALAAC.aac';
@@ -49,6 +50,52 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
       audio.src = STREAM_URL;
       audio.volume = 1; // Set initial volume to 100%
       audio.load();
+      
+      // Listen for metadata to extract genre information
+      const handleLoadedMetadata = () => {
+        // Set a timeout to allow ICY metadata to load
+        setTimeout(() => {
+          try {
+            // Try multiple ways to access ICY metadata
+            const audioWithMetadata = audio as HTMLAudioElement & { metadata?: { genre?: string; GENRE?: string; icyGenre?: string } };
+            if (audioWithMetadata.metadata) {
+              const genre = audioWithMetadata.metadata.genre || audioWithMetadata.metadata.GENRE || audioWithMetadata.metadata.icyGenre;
+              if (genre) {
+                setGenre(genre);
+                console.log('ICY genre found:', genre);
+                return;
+              }
+            }
+            
+            // Fallback: Check if we can access stream headers
+            if (audio.readyState >= 1) {
+              // Try to get genre from stream info
+              const streamInfo = (audio as HTMLAudioElement & { streamInfo?: { genre?: string }; icyMetadata?: { genre?: string } }).streamInfo || 
+                                (audio as HTMLAudioElement & { streamInfo?: { genre?: string }; icyMetadata?: { genre?: string } }).icyMetadata;
+              if (streamInfo && streamInfo.genre) {
+                setGenre(streamInfo.genre);
+                console.log('Stream genre found:', streamInfo.genre);
+                return;
+              }
+            }
+            
+            // If no genre found, set default based on what we know from console logs
+            setGenre('Dance');
+            console.log('Using fallback genre: Dance');
+          } catch {
+            console.log('Could not access ICY metadata, using fallback');
+            setGenre('Dance');
+          }
+        }, 2000); // Wait 2 seconds for metadata to load
+      };
+      
+      audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.addEventListener('canplay', handleLoadedMetadata);
+      
+      return () => {
+        audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        audio.removeEventListener('canplay', handleLoadedMetadata);
+      };
     }
   }, []);
 
@@ -142,14 +189,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
 
   // Format time helper
   const formatTime = (time: number) => {
-    if (isNaN(time)) return '0:00';
+    if (isNaN(time) || !isFinite(time)) return '0:00';
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   return (
-    <div className={`bg-gradient-to-r from-purple-600 to-orange-500 rounded-xl p-4 ${className}`}>
+    <div className={`bg-gradient-to-r from-purple-900 to-blue-950 rounded-xl p-4 ${className}`}>
       <audio
         ref={audioRef}
         preload="metadata"
@@ -162,10 +209,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
       />
 
       <div className="flex items-center space-x-3">
-        {/* Left Icon */}
-        <div className="w-8 h-8 bg-purple-800 border border-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-          <Music className="w-4 h-4 text-white" />
-        </div>
+
 
         {/* Play/Pause Button */}
         <button
@@ -185,10 +229,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
         {/* Track Info */}
         <div className="flex-1 min-w-0">
           <div className="text-white font-medium text-sm truncate">
-            {TRACK_TITLE}
+            {genre ? `OneWorld Radio - ${genre}` : TRACK_TITLE}
           </div>
           <div className="text-white/80 text-xs">
-            {formatTime(currentTime)} / {formatTime(duration)}
+            {!isFinite(duration) ? `${formatTime(currentTime)} • LIVE` : `${formatTime(currentTime)} / ${formatTime(duration)}`}
           </div>
         </div>
 

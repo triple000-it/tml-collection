@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   // Image optimization
   images: {
     domains: ['ngquunzrscytljlzufpu.supabase.co'],
+    qualities: [25, 50, 75, 100],
   },
   
   // Environment variables

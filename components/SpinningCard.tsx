@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { Crown, Zap, Star, Sparkles, MapPin, ChevronRight, X } from 'lucide-react';
@@ -154,9 +154,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   fill
                   className="object-contain"
                   sizes="361px"
-                  quality={100}
                   priority
-                  unoptimized
                 />
               )}
             </div>
@@ -176,9 +174,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   fill
                   className="object-contain"
                   sizes="361px"
-                  quality={100}
                   priority
-                  unoptimized
                 />
               </div>
             )}
@@ -254,9 +250,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   fill
                   className="object-contain cursor-pointer"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  quality={100}
                   priority
-                  unoptimized
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
@@ -283,9 +277,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   fill
                   className="object-contain cursor-pointer"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  quality={100}
                   priority
-                  unoptimized
                 />
                 {/* Image Overlay for back */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>

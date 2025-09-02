@@ -36,6 +36,14 @@ export default function HomePage() {
   
   const { user } = useAuth();
 
+  // Scroll to collections section
+  const scrollToCollections = () => {
+    const collectionsSection = document.getElementById('collections');
+    if (collectionsSection) {
+      collectionsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   // Mock data for demonstration
   const mockDjs: DjData[] = [
     {
@@ -233,15 +241,15 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black">
-          <div className="absolute inset-0 bg-[url('/hero-bg.jpg')] bg-cover bg-center opacity-20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-950 to-black">
+          <div className="absolute inset-0 bg-[url('/hero-bg.svg')] bg-cover bg-center opacity-20"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
         </div>
 
         {/* Hero Content */}
         <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Collect All Tomorrowland DJ Cards
+            NEW & UNIQUE
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Discover, collect, and trade premium digital cards of your favorite Tomorrowland artists.
@@ -249,7 +257,15 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {user ? (
               <>
-                <button className="button-primary">
+                <button 
+                  onClick={() => {
+                    setAuthModalMode('register');
+                    setAuthModalOpen(true);
+                    // Also scroll to collections after opening modal
+                    setTimeout(scrollToCollections, 100);
+                  }}
+                  className="button-primary"
+                >
                   START COLLECTING
                 </button>
                 <button className="button-secondary">
@@ -262,6 +278,8 @@ export default function HomePage() {
                   onClick={() => {
                     setAuthModalMode('register');
                     setAuthModalOpen(true);
+                    // Also scroll to collections after opening modal
+                    setTimeout(scrollToCollections, 100);
                   }}
                   className="button-primary"
                 >
@@ -283,13 +301,13 @@ export default function HomePage() {
       </section>
 
       {/* Collection Section */}
-      <section className="py-20 bg-black">
+      <section id="collections" className="py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                DJ Collection
+                Collections
               </h2>
               <p className="text-gray-400 text-lg">
                 Discover and collect cards from your favorite Tomorrowland artists
@@ -308,7 +326,7 @@ export default function HomePage() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Search DJs, genres, or labels..."
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-white transition-colors"
@@ -397,7 +415,7 @@ export default function HomePage() {
             
             {/* Copyright */}
             <p className="text-gray-400">
-            TML Collections &copy; {new Date().getFullYear()}
+            &copy; {new Date().getFullYear()}
             </p>
             
             {/* Disclaimer */}

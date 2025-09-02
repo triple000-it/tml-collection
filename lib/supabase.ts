@@ -1,9 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ngquunzrscytljlzufpu.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-key'
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Import and re-export the client from the client.ts file to avoid multiple instances
+import { supabase } from './supabase/client'
+export { supabase }
 
 // Database types
 export interface DJ {
