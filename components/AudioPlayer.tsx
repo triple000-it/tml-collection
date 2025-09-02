@@ -115,7 +115,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
   };
 
   return (
-    <div className={`bg-gradient-to-r from-purple-600 to-orange-500 rounded-2xl p-6 ${className}`}>
+    <div className={`bg-gradient-to-r from-purple-600 to-orange-500 rounded-xl p-4 ${className}`}>
       <audio
         ref={audioRef}
         preload="metadata"
@@ -127,70 +127,70 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
         }}
       />
 
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-3">
         {/* Left Icon */}
-        <div className="w-12 h-12 bg-purple-800 border border-white/20 rounded-full flex items-center justify-center">
-          <Music className="w-6 h-6 text-white" />
+        <div className="w-8 h-8 bg-purple-800 border border-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+          <Music className="w-4 h-4 text-white" />
         </div>
 
         {/* Play/Pause Button */}
         <button
           onClick={togglePlayPause}
           disabled={isLoading}
-          className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
         >
           {isLoading ? (
-            <Loader2 className="w-6 h-6 text-white animate-spin" />
+            <Loader2 className="w-4 h-4 text-white animate-spin" />
           ) : isPlaying ? (
-            <Pause className="w-6 h-6 text-white" />
+            <Pause className="w-4 h-4 text-white" />
           ) : (
-            <Play className="w-6 h-6 text-white ml-1" />
+            <Play className="w-4 h-4 text-white ml-0.5" />
           )}
         </button>
 
         {/* Track Info */}
         <div className="flex-1 min-w-0">
-          <div className="text-white font-medium text-lg truncate">
+          <div className="text-white font-medium text-sm truncate">
             {TRACK_TITLE}
           </div>
-          <div className="text-white/80 text-sm">
+          <div className="text-white/80 text-xs">
             {formatTime(currentTime)} / {formatTime(duration)}
           </div>
         </div>
-      </div>
 
-      {/* Progress Bar */}
-      <div className="mt-4">
-        <input
-          type="range"
-          min="0"
-          max={duration || 0}
-          value={currentTime}
-          onChange={handleTimeSeek}
-          className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-          style={{
-            background: `linear-gradient(to right, white 0%, white ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) 100%)`
-          }}
-        />
-      </div>
+        {/* Progress Bar */}
+        <div className="flex-1 min-w-0 mx-2">
+          <input
+            type="range"
+            min="0"
+            max={duration || 0}
+            value={currentTime}
+            onChange={handleTimeSeek}
+            className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
+            style={{
+              background: `linear-gradient(to right, white 0%, white ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) 100%)`
+            }}
+          />
+        </div>
 
-      {/* Volume Controls */}
-      <div className="flex items-center space-x-3 mt-4">
-        <button
-          onClick={toggleMute}
-          className="text-white hover:text-white/80 transition-colors"
-        >
-          {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-        </button>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          value={isMuted ? 0 : volume}
-          onChange={handleVolumeChange}
-          className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-        />
+        {/* Volume Controls */}
+        <div className="flex items-center space-x-2 flex-shrink-0">
+          <button
+            onClick={toggleMute}
+            className="text-white hover:text-white/80 transition-colors"
+          >
+            {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+          </button>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={isMuted ? 0 : volume}
+            onChange={handleVolumeChange}
+            className="w-16 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
+          />
+        </div>
       </div>
 
       {/* Error Message */}
@@ -205,22 +205,22 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ className = '' }) => {
       <style jsx>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
-          width: 16px;
-          height: 16px;
+          width: 12px;
+          height: 12px;
           border-radius: 50%;
           background: white;
           cursor: pointer;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
         
         .slider::-moz-range-thumb {
-          width: 16px;
-          height: 16px;
+          width: 12px;
+          height: 12px;
           border-radius: 50%;
           background: white;
           cursor: pointer;
           border: none;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
       `}</style>
     </div>
