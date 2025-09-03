@@ -306,25 +306,16 @@ export default function HomePage() {
       <section id="collections" className="py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Collections
-              </h2>
-              <p className="text-gray-400 text-lg">
-                Discover and collect cards from your favorite Tomorrowland artists
-              </p>
-            </div>
-            <button className="button-primary flex items-center space-x-2 mt-4 md:mt-0">
-              <Calendar className="w-4 h-4" />
-              <span>VIEW ALL</span>
-            </button>
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+              Collections
+            </h2>
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center items-center">
             {/* Search */}
-            <div className="relative flex-1">
+            <div className="relative w-80">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
@@ -351,6 +342,12 @@ export default function HomePage() {
               </select>
               <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
             </div>
+
+            {/* View All Button */}
+            <button className="button-primary flex items-center space-x-2">
+              <Calendar className="w-4 h-4" />
+              <span>VIEW ALL</span>
+            </button>
           </div>
         </div>
 
