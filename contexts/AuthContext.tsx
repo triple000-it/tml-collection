@@ -156,10 +156,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return { error: { message: 'Authentication not configured. Please set up Supabase environment variables.' } };
       }
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
+
+      // Handle specific error cases
+      if (error) {
+        if (error.message.includes('email not confirmed')) {
+          return { 
+            error: { 
+              message: 'Please check your email and click the confirmation link before signing in. If you don\'t see the email, check your spam folder.' 
+            } 
+          };
+        } else if (error.message.includes('Invalid login credentials')) {
+          return { 
+            error: { 
+              message: 'Invalid email or password. Please check your credentials and try again.' 
+            } 
+          };
+        } else if (error.message.includes('Email address') && error.message.includes('invalid')) {
+          return { 
+            error: { 
+              message: 'Please enter a valid email address.' 
+            } 
+          };
+        }
+      }
 
       return { error };
     } catch (error) {

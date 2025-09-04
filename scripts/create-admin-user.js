@@ -2,56 +2,84 @@
 // Run this with: node scripts/create-admin-user.js
 
 const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config({ path: '.env.local' });
 
-// You'll need to set these environment variables or replace with your actual values
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ngquunzrscytljlzufpu.supabase.co';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'your-service-role-key';
+// Use anon key for registration (no service key needed)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseServiceKey || supabaseServiceKey === 'your-service-role-key') {
-  console.error('Please set SUPABASE_SERVICE_ROLE_KEY environment variable');
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables');
   process.exit(1);
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 async function createAdminUser() {
   try {
-    // Create admin user in Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: 'admin@tmlcollect.com',
-      password: 'admin123456',
-      email_confirm: true,
-      user_metadata: {
-        role: 'admin',
-        first_name: 'Admin',
-        last_name: 'User'
+    console.log('Creating admin user...');
+    
+    // Use the correct admin email
+    const adminEmail = 'info@000-it.com';
+    const adminPassword = 'admin123456';
+    
+    // First, try to sign up the admin user
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email: adminEmail,
+      password: adminPassword,
+      options: {
+        data: {
+          role: 'admin',
+          first_name: 'Admin',
+          last_name: 'User'
+        }
       }
     });
 
-    if (authError) {
-      console.error('Error creating auth user:', authError);
-      return;
+    if (signUpError) {
+      if (signUpError.message.includes('already registered')) {
+        console.log('Admin user already exists, checking if we can sign in...');
+        
+        // Try to sign in
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email: adminEmail,
+          password: adminPassword
+        });
+        
+        if (signInError) {
+          if (signInError.message.includes('email not confirmed')) {
+            console.log('❌ Admin user exists but email is not confirmed.');
+            console.log('📧 Please check your Supabase dashboard to confirm the email or disable email confirmation.');
+            console.log('🔗 Go to: Authentication > Users > info@000-it.com > Confirm email');
+            return;
+          } else {
+            console.error('Sign in error:', signInError.message);
+            return;
+          }
+        } else {
+          console.log('✅ Admin user can sign in successfully!');
+          console.log('📧 Email confirmed:', !!signInData.user?.email_confirmed_at);
+          return;
+        }
+      } else {
+        console.error('Error creating admin user:', signUpError.message);
+        return;
+      }
     }
 
-    console.log('Admin user created successfully:', authData.user.email);
-
-    // Create user in custom users table
-    const { error: userError } = await supabase
-      .from('users')
-      .insert({
-        email: 'admin@tmlcollect.com',
-        role: 'admin',
-        status: 'active',
-        username: 'admin',
-        email_verified: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      });
-
-    if (userError) {
-      console.error('Error creating user in custom table:', userError);
+    console.log('✅ Admin user created successfully:', signUpData.user?.email);
+    
+    if (!signUpData.user?.email_confirmed_at) {
+      console.log('⚠️  Email confirmation required!');
+      console.log('📧 Please check your Supabase dashboard to confirm the email or disable email confirmation.');
+      console.log('🔗 Go to: Authentication > Users > info@000-it.com > Confirm email');
+      console.log('');
+      console.log('To disable email confirmation:');
+      console.log('1. Go to Supabase Dashboard > Authentication > Settings');
+      console.log('2. Disable "Enable email confirmations"');
+      console.log('3. Save changes');
     } else {
-      console.log('Admin user added to custom users table');
+      console.log('✅ Email already confirmed!');
     }
 
   } catch (error) {
