@@ -26,7 +26,7 @@ export default function AdminGuard({ children }: AdminGuardProps) {
 
       try {
         // Check if user is admin by email (hardcoded for demo)
-        const adminEmails = ['admin@tmlcollect.com', 'admin@example.com'];
+        const adminEmails = ['admin@tmlcollect.com', 'admin@example.com', 'info@000-it.com'];
         const isEmailAdmin = adminEmails.includes(user.email || '');
 
         if (isEmailAdmin) {

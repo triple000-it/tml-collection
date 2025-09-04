@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
 
@@ -18,6 +19,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onClose }) => {
   const [success, setSuccess] = useState('');
 
   const { signIn } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,8 +39,22 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onClose }) => {
       setError(error.message || 'An error occurred during login');
     } else {
       setSuccess('Login successful!');
+      
+      // Check if user is admin and redirect accordingly
+      const adminEmails = ['admin@tmlcollect.com', 'admin@example.com', 'info@000-it.com'];
+      const isAdmin = adminEmails.includes(email);
+      
       if (onClose) {
-        setTimeout(() => onClose(), 1000);
+        setTimeout(() => {
+          onClose();
+          if (isAdmin) {
+            router.push('/admin');
+          }
+        }, 1000);
+      } else if (isAdmin) {
+        setTimeout(() => {
+          router.push('/admin');
+        }, 1000);
       }
     }
 
