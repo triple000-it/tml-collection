@@ -53,7 +53,7 @@ export default function HomePage() {
       genres: ['Big Room', 'Progressive House', 'Electro House', 'Future Rave'],
       total_appearances: 15,
       years_active: 14,
-      image_url: '/cards/test-front.png',
+      image_url: '/cards/FRONT.png',
       back_image_url: '/cards/BACK.png',
       rarity: 'LEGENDARY',
       biography: 'Belgian DJ duo and brothers known for their explosive energy and Tomorrowland residency. They have headlined major festivals worldwide and are recognized for their crowd interaction and festival anthems.',
