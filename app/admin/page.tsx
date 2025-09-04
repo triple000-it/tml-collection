@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Upload, User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Image as ImageIcon, Radio, Save, Plus, Edit, Trash2, Eye, Search, Filter, RefreshCw, Users, BarChart3, Package } from 'lucide-react';
+import { User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Plus, Edit, Trash2, Eye, Search, RefreshCw, Users, BarChart3, Package } from 'lucide-react';
 import AdminGuard from '@/components/auth/AdminGuard';
 import { supabase } from '@/lib/supabase/client';
 
@@ -69,7 +69,6 @@ export default function AdminPage() {
   });
   
   // Upload States
-  const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [uploadMessage, setUploadMessage] = useState('');
@@ -84,7 +83,7 @@ export default function AdminPage() {
   // Load data on component mount
   useEffect(() => {
     loadDashboardData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -400,7 +399,7 @@ export default function AdminPage() {
             ].map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
-                onClick={() => setActiveTab(id as any)}
+                onClick={() => setActiveTab(id as 'dashboard' | 'djs' | 'users' | 'settings')}
                 className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                   activeTab === id
                     ? 'bg-white text-black'
@@ -639,7 +638,7 @@ export default function AdminPage() {
                       </label>
                       <select
                         value={djFormData.rarity}
-                        onChange={(e) => setDjFormData({...djFormData, rarity: e.target.value as any})}
+                        onChange={(e) => setDjFormData({...djFormData, rarity: e.target.value as 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY'})}
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-white transition-colors"
                       >
                         <option value="COMMON">Common</option>
