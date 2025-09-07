@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import DjCard from '@/components/DjCard';
 import SpinningCard from '@/components/SpinningCard';
 import AudioPlayer from '@/components/AudioPlayer';
 import AuthModal from '@/components/auth/AuthModal';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
-import { ChevronDown, User, Search, Filter, Calendar } from 'lucide-react';
+import { ChevronDown, User, Search, Filter, Calendar, Shuffle } from 'lucide-react';
 
 interface DjData {
   id: string;
@@ -37,6 +38,11 @@ export default function HomePage() {
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   
   const { user } = useAuth();
+
+  // Function to shuffle the current DJs
+  const handleShuffle = () => {
+    setDjs(prevDjs => shuffleArray(prevDjs));
+  };
 
   // Scroll to collections section
   const scrollToCollections = () => {
@@ -156,6 +162,16 @@ export default function HomePage() {
     }
   ];
 
+  // Fisher-Yates shuffle algorithm for randomizing array
+  const shuffleArray = (array: DjData[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
   useEffect(() => {
     const fetchDjs = async () => {
       setLoading(true);
@@ -165,16 +181,17 @@ export default function HomePage() {
         
         if (response.ok && result.data) {
           console.log('✅ Loaded', result.data.length, 'DJs from database');
-          setDjs(result.data);
+          // Shuffle the DJs randomly on each load
+          setDjs(shuffleArray(result.data));
         } else {
           console.error('Error loading DJs:', result.error);
           // Fallback to mock data if API fails
-          setDjs(mockDjs);
+          setDjs(shuffleArray(mockDjs));
         }
       } catch (error) {
         console.error('Error fetching DJs:', error);
         // Fallback to mock data if API fails
-        setDjs(mockDjs);
+        setDjs(shuffleArray(mockDjs));
       } finally {
         setLoading(false);
       }
@@ -219,9 +236,11 @@ export default function HomePage() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <img 
+              <Image 
                 src="/Favicon-White.png" 
                 alt="TML Collections Logo" 
+                width={40}
+                height={40}
                 className="w-10 h-10"
               />
               <span className="text-white font-bold text-xl">TML COLLECTIONS</span>
@@ -369,6 +388,15 @@ export default function HomePage() {
               <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
             </div>
 
+            {/* Shuffle Button */}
+            <button 
+              onClick={handleShuffle}
+              className="button-secondary flex items-center space-x-2"
+            >
+              <Shuffle className="w-4 h-4" />
+              <span>SHUFFLE</span>
+            </button>
+
             {/* View All Button */}
             <button className="button-primary flex items-center space-x-2">
               <Calendar className="w-4 h-4" />
@@ -432,9 +460,11 @@ export default function HomePage() {
           <div className="flex flex-col items-center text-center space-y-4">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <img 
+              <Image 
                 src="/Favicon-White.png" 
                 alt="TML Collections Logo" 
+                width={48}
+                height={48}
                 className="w-12 h-12"
               />
               <span className="text-2xl font-bold text-white">TML Collections</span>

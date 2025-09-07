@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import Image from 'next/image';
+// import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Supabase client (currently unused but kept for future functionality)
+// const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+// const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface ImageUploadProps {
   djId: string;
@@ -134,10 +136,11 @@ export default function ImageUpload({
         >
           {previewUrl ? (
             <div className="relative w-full h-full">
-              <img
+              <Image
                 src={previewUrl}
                 alt={`${label} preview`}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
                 <button

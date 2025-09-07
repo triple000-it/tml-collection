@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Plus, Edit, Trash2, Eye, Search, RefreshCw, Users, BarChart3, Package, Image } from 'lucide-react';
+import Image from 'next/image';
+import { User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Plus, Edit, Trash2, Eye, Search, RefreshCw, Users, BarChart3, Package } from 'lucide-react';
 import AdminGuard from '@/components/auth/AdminGuard';
 import ImageUpload from '@/components/admin/ImageUpload';
 
@@ -67,7 +68,9 @@ export default function AdminPage() {
     rarity: 'COMMON' as 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY',
     total_appearances: 0,
     years_active: 0,
-    categories: ['mainstage'] as string[]
+    categories: ['mainstage'] as string[],
+    image_url: '',
+    back_image_url: ''
   });
   
   // Upload States
@@ -242,7 +245,9 @@ export default function AdminPage() {
         rarity: 'COMMON',
         total_appearances: 0,
         years_active: 0,
-        categories: ['mainstage']
+        categories: ['mainstage'],
+        image_url: '',
+        back_image_url: ''
       });
       setEditingDj(null);
       setShowDjForm(false);
@@ -300,7 +305,9 @@ export default function AdminPage() {
       rarity: dj.rarity,
       total_appearances: dj.total_appearances,
       years_active: dj.years_active,
-      categories: dj.categories || ['mainstage']
+      categories: dj.categories || ['mainstage'],
+      image_url: dj.image_url || '',
+      back_image_url: dj.back_image_url || ''
     });
     setShowDjForm(true);
   };
@@ -516,7 +523,9 @@ export default function AdminPage() {
                       rarity: 'COMMON',
                       total_appearances: 0,
                       years_active: 0,
-                      categories: ['mainstage']
+                      categories: ['mainstage'],
+                      image_url: '',
+                      back_image_url: ''
                     });
                   }}
                   className="flex items-center space-x-2 bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
@@ -909,9 +918,11 @@ export default function AdminPage() {
                 <div className="space-y-4">
                   <div className="flex items-center space-x-4">
                     <div className="w-24 h-24 bg-gray-700 rounded-lg overflow-hidden">
-                      <img
+                      <Image
                         src="/cards/BACK.png"
                         alt="Card Back Preview"
+                        width={96}
+                        height={96}
                         className="w-full h-full object-cover"
                       />
                     </div>

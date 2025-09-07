@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File;
     const djId = formData.get('djId') as string;
     const imageType = formData.get('imageType') as 'front' | 'back' | 'icon';
-    const category = formData.get('category') as string;
+    // const category = formData.get('category') as string; // Currently unused
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     const filePath = `dj-images/${fileName}`;
 
     // Upload to Supabase Storage
-    const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+    const { error: uploadError } = await supabaseAdmin.storage
       .from('dj-assets')
       .upload(filePath, file, {
         cacheControl: '3600',

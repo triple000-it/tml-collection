@@ -12,7 +12,8 @@ const supabaseAdmin = supabaseUrl && supabaseServiceKey ? createClient(supabaseU
   }
 }) : null;
 
-// Mock data for demo purposes
+// Mock data for demo purposes (currently unused but kept for fallback)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDjs = [
   {
     id: 'dimitri-vegas-like-mike',
