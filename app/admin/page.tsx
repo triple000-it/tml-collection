@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Plus, Edit, Trash2, Eye, Search, RefreshCw, Users, BarChart3, Package } from 'lucide-react';
+import { User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Plus, Edit, Trash2, Eye, Search, RefreshCw, Users, BarChart3, Package, Image } from 'lucide-react';
 import AdminGuard from '@/components/auth/AdminGuard';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface DjData {
   id: string;
@@ -747,6 +748,25 @@ export default function AdminPage() {
                     />
                   </div>
 
+                  {/* Image Upload Section */}
+                  <div className="space-y-6">
+                    <h4 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
+                      Images
+                    </h4>
+                    
+                    <div className="max-w-md">
+                      <ImageUpload
+                        djId={editingDj?.id || ''}
+                        imageType="front"
+                        currentImageUrl={djFormData.image_url}
+                        onImageUpdate={(url) => setDjFormData({...djFormData, image_url: url})}
+                        label="Front Image"
+                        aspectRatio="1/1"
+                        maxSize={10}
+                      />
+                    </div>
+                  </div>
+
                   <div className="flex space-x-4">
                     <button
                       type="submit"
@@ -883,8 +903,33 @@ export default function AdminPage() {
                   </button>
                 </div>
               </div>
+
+              <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
+                <h3 className="text-lg font-bold text-white mb-4">Game Card Settings</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-24 h-24 bg-gray-700 rounded-lg overflow-hidden">
+                      <img
+                        src="/cards/BACK.png"
+                        alt="Card Back Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">Card Back Image</p>
+                      <p className="text-sm text-gray-400">
+                        Using default back image: /public/cards/BACK.png
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        To change the back image, replace the file at /public/cards/BACK.png
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
+
 
           {/* Status Messages */}
           {(uploadStatus !== 'idle' || settingsStatus !== 'idle') && (
