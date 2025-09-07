@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginForm from '@/components/auth/LoginForm';
+import { isAdminEmail } from '@/lib/constants';
 
 export default function LoginPage() {
   const { user, loading } = useAuth();
@@ -12,7 +13,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (!loading && user) {
       // Check if user is admin
-      const isAdmin = user.user_metadata?.role === 'admin' || user.email === 'admin@tmlcollections.com';
+      const isAdmin = user.user_metadata?.role === 'admin' || isAdminEmail(user.email);
       if (isAdmin) {
         router.push('/admin');
       } else {

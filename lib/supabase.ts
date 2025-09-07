@@ -21,6 +21,7 @@ export interface DJ {
   awards: string[]
   spotify_monthly_listeners?: number
   instagram_followers?: number
+  categories: string[]
   is_active: boolean
   created_at: string
   updated_at: string

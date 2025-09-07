@@ -35,8 +35,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+    // Get initial session (only if Supabase is configured)
     const getInitialSession = async () => {
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') || process.env.NEXT_PUBLIC_SUPABASE_URL === 'your_supabase_project_url') {
+        console.log('Demo mode: Skipping initial session check');
+        setLoading(false);
+        return;
+      }
+      
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
@@ -45,38 +51,56 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     getInitialSession();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
+    // Listen for auth changes (only if Supabase is configured)
+    let subscription: any = null;
+    
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') && process.env.NEXT_PUBLIC_SUPABASE_URL !== 'your_supabase_project_url') {
+      const { data: { subscription: sub } } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
 
-        // Handle user creation in our custom users table
-        if (event === 'SIGNED_IN' && session?.user) {
-          await handleUserSignIn(session.user);
+          // Handle user creation in our custom users table
+          if (event === 'SIGNED_IN' && session?.user) {
+            await handleUserSignIn(session.user);
+          }
         }
-      }
-    );
+      );
+      subscription = sub;
+    } else {
+      console.log('Demo mode: Skipping auth state change listener');
+    }
 
-    return () => subscription.unsubscribe();
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
   }, []);
 
   const handleUserSignIn = async (user: User) => {
     try {
       // Skip database operations if Supabase is not configured
-      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')) {
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') || process.env.NEXT_PUBLIC_SUPABASE_URL === 'your_supabase_project_url') {
+        console.log('Demo mode: Skipping database operations for user:', user.email);
         return;
       }
 
       // Check if user exists in our custom users table
-      const { data: existingUser } = await supabase
+      const { data: existingUser, error: checkError } = await supabase
         .from('users')
         .select('*')
         .eq('email', user.email)
         .single();
 
-      if (!existingUser) {
+      // If there's an RLS policy error, skip database operations
+      if (checkError && (checkError.code === '42P17' || checkError.message?.includes('infinite recursion'))) {
+        console.warn('RLS policy error detected, skipping user table operations for:', user.email);
+        return;
+      }
+
+      if (!existingUser && !checkError) {
         // Create user in our custom users table
         const { error } = await supabase
           .from('users')
@@ -92,7 +116,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           });
 
         if (error) {
-          console.error('Error creating user in custom table:', error);
+          // If it's an RLS policy error, just log a warning instead of error
+          if (error.code === '42P17' || error.message?.includes('infinite recursion')) {
+            console.warn('RLS policy error: Cannot create user in custom table for:', user.email);
+          } else {
+            console.error('Error creating user in custom table:', error);
+          }
         } else {
           // Create initial points record
           const { data: newUser } = await supabase
@@ -113,15 +142,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               });
           }
         }
-      } else {
+      } else if (existingUser) {
         // Update last login
-        await supabase
+        const { error: updateError } = await supabase
           .from('users')
           .update({ 
             last_login: new Date().toISOString(),
             updated_at: new Date().toISOString()
           })
           .eq('id', existingUser.id);
+
+        if (updateError && (updateError.code === '42P17' || updateError.message?.includes('infinite recursion'))) {
+          console.warn('RLS policy error: Cannot update user login time for:', user.email);
+        }
       }
     } catch (error) {
       console.error('Error handling user sign in:', error);
@@ -131,8 +164,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signUp = async (email: string, password: string, userData?: any) => {
     try {
       // Check if Supabase is configured
-      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')) {
-        return { error: { message: 'Authentication not configured. Please set up Supabase environment variables.' } };
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') || process.env.NEXT_PUBLIC_SUPABASE_URL === 'your_supabase_project_url') {
+        return { error: { message: 'Demo mode: Registration is disabled. Use admin@tmlcollect.com to login.' } };
       }
 
       const { error } = await supabase.auth.signUp({
@@ -152,8 +185,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signIn = async (email: string, password: string) => {
     try {
       // Check if Supabase is configured
-      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')) {
-        return { error: { message: 'Authentication not configured. Please set up Supabase environment variables.' } };
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') || process.env.NEXT_PUBLIC_SUPABASE_URL === 'your_supabase_project_url') {
+        console.warn('Supabase not configured, using demo mode');
+        // For demo purposes, allow login with any password for admin emails
+        const adminEmails = ['admin@tmlcollect.com', 'admin@example.com', 'info@000-it.com', 'admin@tmlcollections.com'];
+        if (adminEmails.includes(email.toLowerCase())) {
+          // Simulate successful login for admin emails
+          const mockUser = {
+            id: 'demo-admin',
+            email: email,
+            user_metadata: { role: 'admin' },
+            email_confirmed_at: new Date().toISOString()
+          } as any;
+          
+          // Set user and session directly without triggering auth state change
+          setUser(mockUser);
+          setSession({ user: mockUser } as any);
+          setLoading(false);
+          
+          console.log('Demo mode: Admin login successful for', email);
+          return { error: null };
+        } else {
+          return { error: { message: 'Demo mode: Only admin emails are allowed. Use: admin@tmlcollect.com' } };
+        }
       }
 
       const { data, error } = await supabase.auth.signInWithPassword({

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
+import { isAdminEmail } from '@/lib/constants';
 
 interface LoginFormProps {
   onToggleMode: () => void;
@@ -41,8 +42,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onClose }) => {
       setSuccess('Login successful!');
       
       // Check if user is admin and redirect accordingly
-      const adminEmails = ['admin@tmlcollect.com', 'admin@example.com', 'info@000-it.com'];
-      const isAdmin = adminEmails.includes(email);
+      const isAdmin = isAdminEmail(email);
       
       if (onClose) {
         setTimeout(() => {

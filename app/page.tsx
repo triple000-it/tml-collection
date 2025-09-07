@@ -24,10 +24,12 @@ interface DjData {
   debut_year: number;
   record_label?: string;
   awards?: string[];
+  categories: string[];
 }
 
 export default function HomePage() {
   const [loading, setLoading] = useState(true);
+  const [djs, setDjs] = useState<DjData[]>([]);
   const [selectedRarity, setSelectedRarity] = useState<string>('ALL');
   const [searchTerm, setSearchTerm] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -150,13 +152,29 @@ export default function HomePage() {
   useEffect(() => {
     const fetchDjs = async () => {
       setLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setLoading(false);
+      try {
+        const response = await fetch('/api/admin/djs');
+        const result = await response.json();
+        
+        if (response.ok && result.data) {
+          console.log('✅ Loaded', result.data.length, 'DJs from database');
+          setDjs(result.data);
+        } else {
+          console.error('Error loading DJs:', result.error);
+          // Fallback to mock data if API fails
+          setDjs(mockDjs);
+        }
+      } catch (error) {
+        console.error('Error fetching DJs:', error);
+        // Fallback to mock data if API fails
+        setDjs(mockDjs);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchDjs();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const handleScroll = () => {
@@ -167,20 +185,21 @@ export default function HomePage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const filteredDjs = mockDjs.filter(dj => {
+  const filteredDjs = djs.filter(dj => {
     const matchesSearch = dj.stage_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          dj.real_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         dj.nationality.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          dj.genres.some(genre => genre.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesRarity = selectedRarity === 'ALL' || dj.rarity === selectedRarity;
     return matchesSearch && matchesRarity;
   });
 
   const rarityOptions = [
-    { value: 'ALL', label: 'All Cards', count: mockDjs.length },
-    { value: 'LEGENDARY', label: 'Legendary', count: mockDjs.filter(dj => dj.rarity === 'LEGENDARY').length },
-    { value: 'EPIC', label: 'Epic', count: mockDjs.filter(dj => dj.rarity === 'EPIC').length },
-    { value: 'RARE', label: 'Rare', count: mockDjs.filter(dj => dj.rarity === 'RARE').length },
-    { value: 'COMMON', label: 'Common', count: mockDjs.filter(dj => dj.rarity === 'COMMON').length },
+    { value: 'ALL', label: 'All Cards', count: djs.length },
+    { value: 'LEGENDARY', label: 'Legendary', count: djs.filter(dj => dj.rarity === 'LEGENDARY').length },
+    { value: 'EPIC', label: 'Epic', count: djs.filter(dj => dj.rarity === 'EPIC').length },
+    { value: 'RARE', label: 'Rare', count: djs.filter(dj => dj.rarity === 'RARE').length },
+    { value: 'COMMON', label: 'Common', count: djs.filter(dj => dj.rarity === 'COMMON').length },
   ];
 
   return (

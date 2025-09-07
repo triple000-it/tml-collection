@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase/client';
+import { isAdminEmail } from '@/lib/constants';
 
 interface AdminGuardProps {
   children: React.ReactNode;
@@ -25,9 +26,8 @@ export default function AdminGuard({ children }: AdminGuardProps) {
       }
 
       try {
-        // Check if user is admin by email (hardcoded for demo)
-        const adminEmails = ['admin@tmlcollect.com', 'admin@example.com', 'info@000-it.com'];
-        const isEmailAdmin = adminEmails.includes(user.email || '');
+        // Check if user is admin by email
+        const isEmailAdmin = isAdminEmail(user.email);
 
         if (isEmailAdmin) {
           setIsAdmin(true);

@@ -20,6 +20,7 @@ interface DjData {
   debut_year: number;
   record_label?: string;
   awards?: string[];
+  categories: string[];
 }
 
 interface SpinningCardProps {

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Crown, Settings, ArrowLeft, CheckCircle, AlertCircle, Plus, Edit, Trash2, Eye, Search, RefreshCw, Users, BarChart3, Package } from 'lucide-react';
 import AdminGuard from '@/components/auth/AdminGuard';
-import { supabase } from '@/lib/supabase/client';
 
 interface DjData {
   id: string;
@@ -20,6 +19,7 @@ interface DjData {
   debut_year: number;
   record_label?: string;
   awards?: string[];
+  categories: string[];
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -65,7 +65,8 @@ export default function AdminPage() {
     awards: [] as string[],
     rarity: 'COMMON' as 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY',
     total_appearances: 0,
-    years_active: 0
+    years_active: 0,
+    categories: ['mainstage'] as string[]
   });
   
   // Upload States
@@ -79,10 +80,25 @@ export default function AdminPage() {
   const [savingSettings, setSavingSettings] = useState(false);
   const [settingsStatus, setSettingsStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [settingsMessage, setSettingsMessage] = useState('');
+  const [databaseStatus, setDatabaseStatus] = useState<'connected' | 'error' | 'checking'>('checking');
 
   // Load data on component mount
   useEffect(() => {
     loadDashboardData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Set up periodic refresh for real-time-like updates
+  useEffect(() => {
+    // Refresh data every 30 seconds to simulate real-time updates
+    const refreshInterval = setInterval(() => {
+      console.log('Refreshing dashboard data...');
+      loadDashboardData();
+    }, 30000); // 30 seconds
+
+    // Cleanup interval on unmount
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadDashboardData = async () => {
@@ -102,136 +118,115 @@ export default function AdminPage() {
 
   const loadDjs = async () => {
     try {
-      const { data, error } = await supabase
-        .from('djs')
-        .select('*')
-        .order('created_at', { ascending: false });
+      console.log('Loading DJs via API route...');
       
-      if (error) throw error;
-      setDjs(data || []);
+      const response = await fetch('/api/admin/djs');
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error('API error:', result.error);
+        setDatabaseStatus('error');
+        setDjs([]);
+        setUploadStatus('error');
+        setUploadMessage('Failed to load DJs: ' + result.error);
+        return;
+      }
+      
+      console.log('✅ Loaded', result.data?.length || 0, 'DJs from database');
+      setDatabaseStatus('connected');
+      setDjs(result.data || []);
     } catch (error) {
-      console.error('Error loading DJs:', error);
-      // Use mock data if database fails
-      setDjs(getMockDjs());
+      console.error('API connection failed:', error);
+      setDjs([]);
+      setDatabaseStatus('error');
+      setUploadStatus('error');
+      setUploadMessage('Failed to connect to API. Please check your server configuration.');
     }
   };
 
   const loadUsers = async () => {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .order('created_at', { ascending: false });
+      console.log('Loading users via API route...');
       
-      if (error) throw error;
-      setUsers(data || []);
+      const response = await fetch('/api/admin/users');
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error('API error:', result.error);
+        setUsers([]);
+        return;
+      }
+      
+      console.log('✅ Loaded', result.data?.length || 0, 'users from database');
+      setUsers(result.data || []);
     } catch (error) {
-      console.error('Error loading users:', error);
-      // Use mock data if database fails
-      setUsers(getMockUsers());
+      console.error('API connection failed:', error);
+      setUsers([]);
     }
   };
 
   const loadStats = async () => {
     try {
-      const [djCount, userCount, cardCount] = await Promise.all([
-        supabase.from('djs').select('*', { count: 'exact', head: true }),
-        supabase.from('users').select('*', { count: 'exact', head: true }),
-        supabase.from('user_cards').select('*', { count: 'exact', head: true })
-      ]);
-
-      setStats({
-        totalDjs: djCount.count || 0,
-        totalUsers: userCount.count || 0,
-        totalCards: cardCount.count || 0,
-        activeUsers: userCount.count || 0 // Simplified for now
-      });
+      console.log('Loading stats via API route...');
+      
+      const response = await fetch('/api/admin/stats');
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error('API error:', result.error);
+        setStats({ 
+          totalDjs: 0, 
+          totalUsers: 0, 
+          totalCards: 0, 
+          activeUsers: 0 
+        });
+        return;
+      }
+      
+      console.log('✅ Loaded stats from database');
+      setStats(result.data);
     } catch (error) {
-      console.error('Error loading stats:', error);
-      setStats({ totalDjs: djs.length, totalUsers: users.length, totalCards: 0, activeUsers: users.length });
+      console.error('API connection failed for stats:', error);
+      setStats({ 
+        totalDjs: 0, 
+        totalUsers: 0, 
+        totalCards: 0, 
+        activeUsers: 0 
+      });
     }
   };
 
-  const getMockDjs = (): DjData[] => [
-    {
-      id: 'dimitri-vegas-like-mike',
-      stage_name: 'Dimitri Vegas & Like Mike',
-      real_name: 'Dimitri Thivaios & Michael Thivaios',
-      nationality: 'Belgian',
-      genres: ['Big Room', 'Progressive House', 'Electro House'],
-      total_appearances: 15,
-      years_active: 14,
-      rarity: 'LEGENDARY',
-      debut_year: 2010,
-      record_label: 'Smash The House',
-      awards: ['DJ Mag Top 100 #1', 'Tomorrowland Headliners'],
-      is_active: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: 'martin-garrix',
-      stage_name: 'Martin Garrix',
-      real_name: 'Martijn Garritsen',
-      nationality: 'Dutch',
-      genres: ['Big Room', 'Progressive House', 'Future Bass'],
-      total_appearances: 12,
-      years_active: 11,
-      rarity: 'LEGENDARY',
-      debut_year: 2013,
-      record_label: 'STMPD RCRDS',
-      awards: ['DJ Mag Top 100 #1', 'Tomorrowland Headliners'],
-      is_active: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  ];
-
-  const getMockUsers = (): UserData[] => [
-    {
-      id: '1',
-      email: 'info@000-it.com',
-      username: 'admin',
-      role: 'admin',
-      is_active: true,
-      last_login: new Date().toISOString(),
-      created_at: new Date().toISOString()
-    }
-  ];
 
   const handleDjSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
     
     try {
-      if (editingDj) {
-        // Update existing DJ
-        const { error } = await supabase
-          .from('djs')
-          .update({
-            ...djFormData,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', editingDj.id);
-        
-        if (error) throw error;
-        setUploadStatus('success');
-        setUploadMessage('DJ updated successfully!');
-      } else {
-        // Create new DJ
-        const { error } = await supabase
-          .from('djs')
-          .insert({
-            ...djFormData,
-            is_active: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          });
-        
-        if (error) throw error;
-        setUploadStatus('success');
-        setUploadMessage('DJ created successfully!');
+      const url = editingDj ? '/api/admin/djs' : '/api/admin/djs';
+      const method = editingDj ? 'PUT' : 'POST';
+      const body = editingDj 
+        ? { id: editingDj.id, ...djFormData }
+        : djFormData;
+      
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error('API error:', result.error);
+        setUploadStatus('error');
+        setUploadMessage('Failed to save DJ. API error: ' + result.error);
+        return;
       }
+      
+      setUploadStatus('success');
+      setUploadMessage(editingDj ? 'DJ updated successfully!' : 'DJ created successfully!');
       
       // Reset form
       setDjFormData({
@@ -245,7 +240,8 @@ export default function AdminPage() {
         awards: [],
         rarity: 'COMMON',
         total_appearances: 0,
-        years_active: 0
+        years_active: 0,
+        categories: ['mainstage']
       });
       setEditingDj(null);
       setShowDjForm(false);
@@ -266,20 +262,26 @@ export default function AdminPage() {
     if (!confirm('Are you sure you want to delete this DJ?')) return;
     
     try {
-      const { error } = await supabase
-        .from('djs')
-        .delete()
-        .eq('id', djId);
+      const response = await fetch(`/api/admin/djs?id=${djId}`, {
+        method: 'DELETE',
+      });
       
-      if (error) throw error;
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error('API error:', result.error);
+        setUploadStatus('error');
+        setUploadMessage('Failed to delete DJ. API error: ' + result.error);
+        return;
+      }
       
       setUploadStatus('success');
       setUploadMessage('DJ deleted successfully!');
       await loadDjs();
     } catch (error) {
-      console.error('Error deleting DJ:', error);
+      console.error('API connection failed:', error);
       setUploadStatus('error');
-      setUploadMessage('Failed to delete DJ. Please try again.');
+      setUploadMessage('Failed to delete DJ. Connection error: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
@@ -296,7 +298,8 @@ export default function AdminPage() {
       awards: dj.awards || [],
       rarity: dj.rarity,
       total_appearances: dj.total_appearances,
-      years_active: dj.years_active
+      years_active: dj.years_active,
+      categories: dj.categories || ['mainstage']
     });
     setShowDjForm(true);
   };
@@ -308,6 +311,7 @@ export default function AdminPage() {
     const matchesRarity = selectedRarity === 'ALL' || dj.rarity === selectedRarity;
     return matchesSearch && matchesRarity;
   });
+
 
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
@@ -378,6 +382,28 @@ export default function AdminPage() {
                   <RefreshCw className="w-4 h-4" />
                   <span className="text-sm">Refresh</span>
                 </button>
+                
+                {/* Database Status Indicator */}
+                <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium ${
+                  databaseStatus === 'connected' 
+                    ? 'bg-green-500/20 text-green-400' 
+                    : databaseStatus === 'error'
+                    ? 'bg-red-500/20 text-red-400'
+                    : 'bg-yellow-500/20 text-yellow-400'
+                }`}>
+                  <div className={`w-2 h-2 rounded-full ${
+                    databaseStatus === 'connected' 
+                      ? 'bg-green-400' 
+                      : databaseStatus === 'error'
+                      ? 'bg-red-400'
+                      : 'bg-yellow-400 animate-pulse'
+                  }`}></div>
+                  <span>
+                    {databaseStatus === 'connected' ? 'Database Connected' : 
+                     databaseStatus === 'error' ? 'Database Error' : 'Checking...'}
+                  </span>
+                </div>
+                
                 <div className="flex items-center space-x-2 text-gray-400">
                   <User className="w-4 h-4" />
                   <span className="text-sm">Admin User</span>
@@ -488,7 +514,8 @@ export default function AdminPage() {
                       awards: [],
                       rarity: 'COMMON',
                       total_appearances: 0,
-                      years_active: 0
+                      years_active: 0,
+                      categories: ['mainstage']
                     });
                   }}
                   className="flex items-center space-x-2 bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
@@ -668,6 +695,36 @@ export default function AdminPage() {
                         onChange={(e) => setDjFormData({...djFormData, record_label: e.target.value})}
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-white transition-colors"
                       />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        Categories
+                      </label>
+                      <div className="space-y-2">
+                        {['mainstage', 'trance', 'secondstage', 'underground', 'special'].map((category) => (
+                          <label key={category} className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              checked={djFormData.categories.includes(category)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setDjFormData({
+                                    ...djFormData,
+                                    categories: [...djFormData.categories, category]
+                                  });
+                                } else {
+                                  setDjFormData({
+                                    ...djFormData,
+                                    categories: djFormData.categories.filter(c => c !== category)
+                                  });
+                                }
+                              }}
+                              className="w-4 h-4 text-white bg-gray-800 border-gray-700 rounded focus:ring-white focus:ring-2"
+                            />
+                            <span className="text-gray-300 capitalize">{category}</span>
+                          </label>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
