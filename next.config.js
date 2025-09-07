@@ -5,7 +5,20 @@ const nextConfig = {
   
   // Image optimization
   images: {
-    domains: ['ngquunzrscytljlzufpu.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ngquunzrscytljlzufpu.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
     qualities: [25, 50, 75, 100],
   },
   

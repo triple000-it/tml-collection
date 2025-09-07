@@ -20,7 +20,6 @@ interface DjData {
   biography?: string;
   debut_year: number;
   record_label?: string;
-  awards?: string[];
   categories: string[];
   is_active: boolean;
   created_at: string;
@@ -64,7 +63,6 @@ export default function AdminPage() {
     biography: '',
     debut_year: new Date().getFullYear(),
     record_label: '',
-    awards: [] as string[],
     rarity: 'COMMON' as 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY',
     total_appearances: 0,
     years_active: 0,
@@ -241,7 +239,6 @@ export default function AdminPage() {
         biography: '',
         debut_year: new Date().getFullYear(),
         record_label: '',
-        awards: [],
         rarity: 'COMMON',
         total_appearances: 0,
         years_active: 0,
@@ -301,7 +298,6 @@ export default function AdminPage() {
       biography: dj.biography || '',
       debut_year: dj.debut_year,
       record_label: dj.record_label || '',
-      awards: dj.awards || [],
       rarity: dj.rarity,
       total_appearances: dj.total_appearances,
       years_active: dj.years_active,
@@ -519,7 +515,6 @@ export default function AdminPage() {
                       biography: '',
                       debut_year: new Date().getFullYear(),
                       record_label: '',
-                      awards: [],
                       rarity: 'COMMON',
                       total_appearances: 0,
                       years_active: 0,

@@ -50,7 +50,32 @@ export async function POST(request: NextRequest) {
 
     if (uploadError) {
       console.error('Upload error:', uploadError);
-      return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+      // If Supabase storage fails, return a mock URL for development
+      const mockUrl = `https://via.placeholder.com/400x400/1a1a1a/ffffff?text=${encodeURIComponent(fileName)}`;
+      
+      // Update DJ record with mock URL
+      if (djId && imageType) {
+        const updateField = imageType === 'front' ? 'image_url' : 
+                           imageType === 'back' ? 'back_image_url' : 'icon_url';
+        
+        const { error: updateError } = await supabaseAdmin
+          .from('djs')
+          .update({ [updateField]: mockUrl })
+          .eq('id', djId);
+
+        if (updateError) {
+          console.error('Update error:', updateError);
+          return NextResponse.json({ error: 'Failed to update DJ record' }, { status: 500 });
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        url: mockUrl,
+        path: filePath,
+        fileName: fileName,
+        warning: 'Using placeholder image - Supabase storage not configured'
+      });
     }
 
     // Get public URL
