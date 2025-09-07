@@ -701,27 +701,34 @@ export default function AdminPage() {
                         Categories
                       </label>
                       <div className="space-y-2">
-                        {['mainstage', 'trance', 'secondstage', 'underground', 'special'].map((category) => (
-                          <label key={category} className="flex items-center space-x-2">
+                        {[
+                          { value: 'mainstage', label: 'Mainstage' },
+                          { value: 'asot', label: 'ASOT (Trance)' },
+                          { value: 'core', label: 'Core (Techno)' },
+                          { value: 'qdance', label: 'Q-Dance (Hardstyle)' },
+                          { value: 'elixir', label: 'Elixir (House)' },
+                          { value: 'liveact', label: 'Live Act' }
+                        ].map((category) => (
+                          <label key={category.value} className="flex items-center space-x-2">
                             <input
                               type="checkbox"
-                              checked={djFormData.categories.includes(category)}
+                              checked={djFormData.categories.includes(category.value)}
                               onChange={(e) => {
                                 if (e.target.checked) {
                                   setDjFormData({
                                     ...djFormData,
-                                    categories: [...djFormData.categories, category]
+                                    categories: [...djFormData.categories, category.value]
                                   });
                                 } else {
                                   setDjFormData({
                                     ...djFormData,
-                                    categories: djFormData.categories.filter(c => c !== category)
+                                    categories: djFormData.categories.filter(c => c !== category.value)
                                   });
                                 }
                               }}
                               className="w-4 h-4 text-white bg-gray-800 border-gray-700 rounded focus:ring-white focus:ring-2"
                             />
-                            <span className="text-gray-300 capitalize">{category}</span>
+                            <span className="text-gray-300">{category.label}</span>
                           </label>
                         ))}
                       </div>

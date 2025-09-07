@@ -61,7 +61,8 @@ export default function HomePage() {
       biography: 'Belgian DJ duo and brothers known for their explosive energy and Tomorrowland residency. They have headlined major festivals worldwide and are recognized for their crowd interaction and festival anthems.',
       debut_year: 2010,
       record_label: 'Smash The House',
-      awards: ['DJ Mag Top 100 #1 (2015, 2019)', 'Tomorrowland Residents', 'Best Festival Performance 2018']
+      awards: ['DJ Mag Top 100 #1 (2015, 2019)', 'Tomorrowland Residents', 'Best Festival Performance 2018'],
+      categories: ['mainstage']
     },
     {
       id: 'martin-garrix',
@@ -75,7 +76,8 @@ export default function HomePage() {
       biography: 'Dutch DJ and producer who became the youngest DJ to reach #1 in DJ Mag Top 100 at age 17. Known for his melodic big room sound and massive festival performances.',
       debut_year: 2013,
       record_label: 'STMPD RCRDS',
-      awards: ['DJ Mag Top 100 #1 (2016, 2017, 2018)', 'Tomorrowland Residents', 'Youngest #1 DJ Ever']
+      awards: ['DJ Mag Top 100 #1 (2016, 2017, 2018)', 'Tomorrowland Residents', 'Youngest #1 DJ Ever'],
+      categories: ['mainstage']
     },
     {
       id: 'armin-van-buuren',
@@ -89,7 +91,8 @@ export default function HomePage() {
       biography: 'Dutch trance legend and producer, host of the iconic A State of Trance radio show. Known as the "King of Trance" with over 20 years of experience.',
       debut_year: 2005,
       record_label: 'Armada Music',
-      awards: ['DJ Mag Top 100 #1 (2007-2010, 2012)', 'Tomorrowland Legends', 'Trance Hall of Fame']
+      awards: ['DJ Mag Top 100 #1 (2007-2010, 2012)', 'Tomorrowland Legends', 'Trance Hall of Fame'],
+      categories: ['mainstage', 'asot']
     },
     {
       id: 'hardwell',
@@ -103,7 +106,8 @@ export default function HomePage() {
       biography: 'Dutch DJ and producer, founder of Revealed Recordings. Known for his energetic big room sound and spectacular live performances with incredible stage production.',
       debut_year: 2011,
       record_label: 'Revealed Recordings',
-      awards: ['DJ Mag Top 100 #1 (2013, 2014)', 'Best Big Room Producer', 'Ultra Music Festival Headliner']
+      awards: ['DJ Mag Top 100 #1 (2013, 2014)', 'Best Big Room Producer', 'Ultra Music Festival Headliner'],
+      categories: ['mainstage']
     },
     {
       id: 'afrojack',
@@ -117,7 +121,8 @@ export default function HomePage() {
       biography: 'Dutch DJ and producer, founder of Wall Recordings. Known for his distinctive sound and collaborations with major pop artists. Pioneer of the Dutch house movement.',
       debut_year: 2010,
       record_label: 'Wall Recordings',
-      awards: ['DJ Mag Top 100 #8 (2011)', 'Grammy Winner', 'Best Dutch DJ 2015']
+      awards: ['DJ Mag Top 100 #8 (2011)', 'Grammy Winner', 'Best Dutch DJ 2015'],
+      categories: ['mainstage']
     },
     {
       id: 'don-diablo',
@@ -131,7 +136,8 @@ export default function HomePage() {
       biography: 'Dutch DJ and producer, pioneer of the future house genre. Known for his innovative sound design and cinematic approach to electronic music production.',
       debut_year: 2016,
       record_label: 'Hexagon',
-      awards: ['DJ Mag Top 100 #11 (2018)', 'Future House Pioneer', 'Best New Artist 2017']
+      awards: ['DJ Mag Top 100 #11 (2018)', 'Future House Pioneer', 'Best New Artist 2017'],
+      categories: ['elixir']
     },
     {
       id: 'charlotte-de-witte',
@@ -145,7 +151,8 @@ export default function HomePage() {
       biography: 'Belgian techno DJ and producer, founder of KNTXT label. Rising star in the techno scene known for her dark, industrial sound and powerful performances.',
       debut_year: 2019,
       record_label: 'KNTXT',
-      awards: ['DJ Mag Top 100 #13 (2020)', 'Best Techno DJ 2021', 'Rising Star Award']
+      awards: ['DJ Mag Top 100 #13 (2020)', 'Best Techno DJ 2021', 'Rising Star Award'],
+      categories: ['core']
     }
   ];
 

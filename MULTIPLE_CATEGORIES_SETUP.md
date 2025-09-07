@@ -44,11 +44,12 @@ node scripts/add-trance-category.js
 - Same DJ can appear in different category filters
 
 ### 2. **Available Categories**
-- **mainstage**: Main stage DJs
-- **trance**: Trance music DJs  
-- **secondstage**: Second stage DJs
-- **underground**: Underground DJs
-- **special**: Special event DJs
+- **mainstage**: Mainstage DJs
+- **asot**: ASOT (Trance) DJs
+- **core**: Core (Techno) DJs
+- **qdance**: Q-Dance (Hardstyle) DJs
+- **elixir**: Elixir (House) DJs
+- **liveact**: Live Act DJs
 
 ### 3. **Admin Panel Features**
 - Multi-select checkboxes for categories
@@ -56,9 +57,11 @@ node scripts/add-trance-category.js
 - Visual display of all categories per DJ
 
 ### 4. **Example Use Cases**
-- Armin van Buuren: ["mainstage", "trance"]
-- Charlotte de Witte: ["mainstage", "underground"]
-- Tiësto: ["mainstage", "trance", "special"]
+- Armin van Buuren: ["mainstage", "asot"]
+- Charlotte de Witte: ["core"]
+- Don Diablo: ["elixir"]
+- Headhunterz: ["qdance"]
+- Pendulum: ["liveact"]
 
 ## Next Steps After Migration
 
