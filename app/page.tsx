@@ -160,7 +160,7 @@ export default function HomePage() {
     const fetchDjs = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/admin/djs');
+        const response = await fetch('/api/admin/djs/');
         const result = await response.json();
         
         if (response.ok && result.data) {

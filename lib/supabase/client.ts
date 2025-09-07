@@ -1,5 +1,8 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createBrowserClient } from '@supabase/ssr'
 
-// Use the auth helpers client to avoid multiple instances
-export const supabase = createClientComponentClient()
+// Create a client for client-side operations
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
+
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
 export const supabaseClient = supabase
