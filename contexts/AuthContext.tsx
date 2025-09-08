@@ -37,16 +37,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     // Get initial session (only if Supabase is configured)
     const getInitialSession = async () => {
+      console.log('AuthContext: getInitialSession called');
+      
       if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') || process.env.NEXT_PUBLIC_SUPABASE_URL === 'your_supabase_project_url') {
         console.log('Demo mode: Skipping initial session check');
         setLoading(false);
         return;
       }
       
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+      console.log('AuthContext: Getting session from Supabase...');
+      try {
+        // Add timeout to prevent hanging
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Session check timeout')), 5000)
+        );
+        
+        const { data: { session }, error } = await Promise.race([sessionPromise, timeoutPromise]) as any;
+        console.log('AuthContext: Session result', { session: session?.user?.email, error });
+        setSession(session);
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error('AuthContext: Error getting session', error);
+        // Set user to null if session check fails
+        setSession(null);
+        setUser(null);
+      } finally {
+        console.log('AuthContext: Setting loading to false');
+        setLoading(false);
+      }
     };
 
     getInitialSession();

@@ -242,8 +242,9 @@ export async function PUT(request: NextRequest) {
       updated_at: new Date().toISOString()
     };
     
-    // Remove first_tomorrowland_year from dbData since it doesn't exist in database
+    // Remove frontend-only fields that don't exist in database
     delete dbData.first_tomorrowland_year;
+    delete dbData.back_image_url; // This is frontend-only, not stored in database
     
     const { data, error } = await supabaseAdmin
       .from('djs')

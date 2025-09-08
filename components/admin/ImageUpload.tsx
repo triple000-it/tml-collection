@@ -104,15 +104,29 @@ export default function ImageUpload({
     if (!currentImageUrl) return;
 
     try {
-      const response = await fetch(`/api/admin/images/upload?path=${encodeURIComponent(currentImageUrl)}&djId=${djId}&imageType=${imageType}`, {
-        method: 'DELETE',
+      // Update the DJ record to set the image URL to null
+      const updateData: any = { id: djId };
+      
+      if (imageType === 'front') {
+        updateData.image_url = null;
+      } else if (imageType === 'back') {
+        updateData.back_image_url = null;
+      }
+
+      const response = await fetch('/api/admin/djs/', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
       });
 
       const result = await response.json();
 
-      if (result.success) {
+      if (response.ok && result.data) {
         setPreviewUrl(null);
         onImageUpdate('');
+        setError(null);
       } else {
         setError(result.error || 'Delete failed');
       }
