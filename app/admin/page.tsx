@@ -18,7 +18,7 @@ interface DjData {
   back_image_url?: string;
   rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
   biography?: string;
-  debut_year: number;
+  first_tomorrowland_year: number;
   record_label?: string;
   categories: string[];
   is_active: boolean;
@@ -61,7 +61,7 @@ export default function AdminPage() {
     nationality: '',
     genres: [] as string[],
     biography: '',
-    debut_year: new Date().getFullYear(),
+    first_tomorrowland_year: new Date().getFullYear(),
     record_label: '',
     rarity: 'COMMON' as 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY',
     total_appearances: 0,
@@ -237,7 +237,7 @@ export default function AdminPage() {
         nationality: '',
         genres: [],
         biography: '',
-        debut_year: new Date().getFullYear(),
+        first_tomorrowland_year: new Date().getFullYear(),
         record_label: '',
         rarity: 'COMMON',
         total_appearances: 0,
@@ -296,7 +296,7 @@ export default function AdminPage() {
       nationality: dj.nationality,
       genres: dj.genres,
       biography: dj.biography || '',
-      debut_year: dj.debut_year,
+      first_tomorrowland_year: dj.first_tomorrowland_year,
       record_label: dj.record_label || '',
       rarity: dj.rarity,
       total_appearances: dj.total_appearances,
@@ -513,7 +513,7 @@ export default function AdminPage() {
                       nationality: '',
                       genres: [],
                       biography: '',
-                      debut_year: new Date().getFullYear(),
+                      first_tomorrowland_year: new Date().getFullYear(),
                       record_label: '',
                       rarity: 'COMMON',
                       total_appearances: 0,
@@ -681,12 +681,12 @@ export default function AdminPage() {
                     </div>
                     <div>
                       <label className="block text-gray-300 text-sm font-medium mb-2">
-                        Debut Year
+                        First Tomorrowland Year
                       </label>
                       <input
                         type="number"
-                        value={djFormData.debut_year}
-                        onChange={(e) => setDjFormData({...djFormData, debut_year: parseInt(e.target.value)})}
+                        value={djFormData.first_tomorrowland_year}
+                        onChange={(e) => setDjFormData({...djFormData, first_tomorrowland_year: parseInt(e.target.value)})}
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-white transition-colors"
                       />
                     </div>

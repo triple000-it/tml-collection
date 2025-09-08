@@ -22,7 +22,7 @@ interface DjData {
   back_image_url?: string;
   rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
   biography?: string;
-  debut_year: number;
+  first_tomorrowland_year: number;
   record_label?: string;
   awards?: string[];
   categories: string[];
@@ -65,7 +65,7 @@ export default function HomePage() {
       back_image_url: '/cards/BACK.png',
       rarity: 'LEGENDARY',
       biography: 'Belgian DJ duo and brothers known for their explosive energy and Tomorrowland residency. They have headlined major festivals worldwide and are recognized for their crowd interaction and festival anthems.',
-      debut_year: 2010,
+      first_tomorrowland_year: 2005,
       record_label: 'Smash The House',
       awards: ['DJ Mag Top 100 #1 (2015, 2019)', 'Tomorrowland Residents', 'Best Festival Performance 2018'],
       categories: ['mainstage']
@@ -80,7 +80,7 @@ export default function HomePage() {
       image_url: '/dj-images/martin-garrix.jpg',
       rarity: 'LEGENDARY',
       biography: 'Dutch DJ and producer who became the youngest DJ to reach #1 in DJ Mag Top 100 at age 17. Known for his melodic big room sound and massive festival performances.',
-      debut_year: 2013,
+      first_tomorrowland_year: 2014,
       record_label: 'STMPD RCRDS',
       awards: ['DJ Mag Top 100 #1 (2016, 2017, 2018)', 'Tomorrowland Residents', 'Youngest #1 DJ Ever'],
       categories: ['mainstage']
@@ -95,7 +95,7 @@ export default function HomePage() {
       image_url: '/dj-images/armin-van-buuren.jpg',
       rarity: 'LEGENDARY',
       biography: 'Dutch trance legend and producer, host of the iconic A State of Trance radio show. Known as the "King of Trance" with over 20 years of experience.',
-      debut_year: 2005,
+      first_tomorrowland_year: 2005,
       record_label: 'Armada Music',
       awards: ['DJ Mag Top 100 #1 (2007-2010, 2012)', 'Tomorrowland Legends', 'Trance Hall of Fame'],
       categories: ['mainstage', 'asot']
@@ -110,7 +110,7 @@ export default function HomePage() {
       image_url: '/dj-images/hardwell.jpg',
       rarity: 'EPIC',
       biography: 'Dutch DJ and producer, founder of Revealed Recordings. Known for his energetic big room sound and spectacular live performances with incredible stage production.',
-      debut_year: 2011,
+      first_tomorrowland_year: 2012,
       record_label: 'Revealed Recordings',
       awards: ['DJ Mag Top 100 #1 (2013, 2014)', 'Best Big Room Producer', 'Ultra Music Festival Headliner'],
       categories: ['mainstage']
@@ -125,7 +125,7 @@ export default function HomePage() {
       image_url: '/dj-images/afrojack.jpg',
       rarity: 'EPIC',
       biography: 'Dutch DJ and producer, founder of Wall Recordings. Known for his distinctive sound and collaborations with major pop artists. Pioneer of the Dutch house movement.',
-      debut_year: 2010,
+      first_tomorrowland_year: 2010,
       record_label: 'Wall Recordings',
       awards: ['DJ Mag Top 100 #8 (2011)', 'Grammy Winner', 'Best Dutch DJ 2015'],
       categories: ['mainstage']
@@ -140,7 +140,7 @@ export default function HomePage() {
       image_url: '/dj-images/don-diablo.jpg',
       rarity: 'RARE',
       biography: 'Dutch DJ and producer, pioneer of the future house genre. Known for his innovative sound design and cinematic approach to electronic music production.',
-      debut_year: 2016,
+      first_tomorrowland_year: 2017,
       record_label: 'Hexagon',
       awards: ['DJ Mag Top 100 #11 (2018)', 'Future House Pioneer', 'Best New Artist 2017'],
       categories: ['elixir']
@@ -155,7 +155,7 @@ export default function HomePage() {
       image_url: '/dj-images/charlotte-de-witte.jpg',
       rarity: 'COMMON',
       biography: 'Belgian techno DJ and producer, founder of KNTXT label. Rising star in the techno scene known for her dark, industrial sound and powerful performances.',
-      debut_year: 2019,
+      first_tomorrowland_year: 2018,
       record_label: 'KNTXT',
       awards: ['DJ Mag Top 100 #13 (2020)', 'Best Techno DJ 2021', 'Rising Star Award'],
       categories: ['core']
@@ -179,12 +179,12 @@ export default function HomePage() {
         const response = await fetch('/api/admin/djs/');
         const result = await response.json();
         
-        if (response.ok && result.data) {
+        if (response.ok && result.data && result.data.length > 0) {
           console.log('✅ Loaded', result.data.length, 'DJs from database');
           // Shuffle the DJs randomly on each load
           setDjs(shuffleArray(result.data));
         } else {
-          console.error('Error loading DJs:', result.error);
+          console.log('Using mock data - API returned:', result.data?.length || 0, 'DJs');
           // Fallback to mock data if API fails
           setDjs(shuffleArray(mockDjs));
         }

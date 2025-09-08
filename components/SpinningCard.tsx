@@ -17,7 +17,7 @@ interface DjData {
   back_image_url?: string;
   rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
   biography?: string;
-  debut_year: number;
+  first_tomorrowland_year: number;
   record_label?: string;
   awards?: string[];
   categories: string[];
@@ -212,13 +212,6 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="absolute top-4 left-4 z-10">
-          <div className="bg-black/80 backdrop-blur-sm rounded px-2 py-1">
-            <div className="text-white text-xs font-bold uppercase">
-              {djData.debut_year}
-            </div>
-          </div>
-        </div>
 
         <div className="absolute top-4 right-4 z-10">
           <div className={`px-3 py-1 rounded-full text-xs font-bold flex items-center space-x-1 ${rarityStyles.badge}`}>

@@ -10,7 +10,7 @@ add_dj() {
     local biography="$4"
     local genres="$5"
     local record_label="$6"
-    local debut_year="$7"
+    local first_tomorrowland_year="$7"
     local total_appearances="$8"
     local years_active="$9"
     local rarity="${10}"
@@ -26,7 +26,7 @@ add_dj() {
             \"biography\": \"$biography\",
             \"genres\": [$genres],
             \"record_label\": \"$record_label\",
-            \"debut_year\": $debut_year,
+            \"first_tomorrowland_year\": $first_tomorrowland_year,
             \"total_appearances\": $total_appearances,
             \"years_active\": $years_active,
             \"rarity\": \"$rarity\",
@@ -39,11 +39,11 @@ add_dj() {
 }
 
 # Add all DJs
-add_dj "Above & Beyond" "Jono Grant, Tony McGuinness, Paavo Siljamäki" "British" "The emotional leaders of modern trance. Known for their deep, melodic sound and the iconic Group Therapy radio show." "\"Trance\", \"Progressive Trance\", \"Uplifting Trance\", \"Ambient\"" "Anjunabeats" 2004 12 20 "LEGENDARY" "mainstage" "\"asot\""
+add_dj "Above & Beyond" "Jono Grant, Tony McGuinness, Paavo Siljamäki" "British" "The emotional leaders of modern trance. Known for their deep, melodic sound and the iconic Group Therapy radio show." "\"Trance\", \"Progressive Trance\", \"Uplifting Trance\", \"Ambient\"" "Anjunabeats" 2006 12 20 "LEGENDARY" "mainstage" "\"asot\""
 
 add_dj "Acraze" "Acraze" "American" "Rising DJ and producer known for his energetic performances and viral hits." "\"House\", \"Tech House\", \"Bass House\"" "Spinnin' Records" 2020 3 4 "RARE" "mainstage" "\"mainstage\""
 
-add_dj "Adam Beyer" "Adam Beyer" "Swedish" "The techno king and Drumcode boss. A leading figure in modern techno and the founder of one of the most influential techno labels." "\"Techno\", \"Minimal Techno\", \"Tech House\", \"Industrial Techno\"" "Drumcode" 1999 10 25 "EPIC" "mainstage" "\"core\""
+add_dj "Adam Beyer" "Adam Beyer" "Swedish" "The techno king and Drumcode boss. A leading figure in modern techno and the founder of one of the most influential techno labels." "\"Techno\", \"Minimal Techno\", \"Tech House\", \"Industrial Techno\"" "Drumcode" 2006 10 25 "EPIC" "mainstage" "\"core\""
 
 add_dj "Adriatique" "Adrian Shala, Adrian Schweizer" "Swiss" "Melodic techno stars known for their emotional, cinematic sound and Siamese label." "\"Melodic Techno\", \"Deep House\", \"Progressive House\", \"Minimal House\"" "Siamese" 2012 6 12 "UNCOMMON" "mainstage" "\"core\", \"elixir\""
 
@@ -81,7 +81,7 @@ add_dj "Brennan Heart" "Fabian Bohn" "Dutch" "Hardstyle heavyweight and We R Mus
 
 add_dj "CamelPhat" "Dave Whelan, Mike Di Scala" "British" "Grammy-nominated melodic house/techno duo known for their emotional, cinematic sound." "\"Melodic House\", \"Melodic Techno\", \"Deep House\", \"Progressive House\"" "When Stars Align" 2014 6 10 "UNCOMMON" "mainstage" "\"elixir\""
 
-add_dj "Carl Cox" "Carl Cox" "British" "The techno godfather and global ambassador of electronic music. A true legend with 35+ years of influence." "\"Techno\", \"House\", \"Acid House\", \"Tech House\"" "Intec Digital" 1989 18 35 "LEGENDARY" "mainstage" "\"core\""
+add_dj "Carl Cox" "Carl Cox" "British" "The techno godfather and global ambassador of electronic music. A true legend with 35+ years of influence." "\"Techno\", \"House\", \"Acid House\", \"Tech House\"" "Intec Digital" 2008 18 35 "LEGENDARY" "mainstage" "\"core\""
 
 add_dj "Charlotte de Witte" "Charlotte de Witte" "Belgian" "Belgian techno queen known for her high-energy sets and KNTXT label." "\"Techno\", \"Industrial Techno\", \"Dark Techno\"" "KNTXT" 2015 8 9 "EPIC" "mainstage" "\"core\""
 
@@ -115,9 +115,9 @@ add_dj "DVBBS" "Alexandre van den Hoef, Christopher van den Hoef" "Canadian" "Ca
 
 add_dj "Enrico Sangiuliano" "Enrico Sangiuliano" "Italian" "Italian techno producer known for his dark, industrial sound and Drumcode releases." "\"Techno\", \"Minimal Techno\", \"Industrial Techno\", \"Acid Techno\"" "Drumcode" 2014 5 10 "COMMON" "mainstage" "\"core\""
 
-add_dj "Eric Prydz" "Eric Sheridan Prydz" "Swedish" "The visionary behind Pryda, Cirez D, and his epic HOLO show. A true innovator in progressive electronic music." "\"Progressive House\", \"Techno\", \"Ambient\", \"Melodic Techno\"" "Mouseville Records" 2004 12 20 "LEGENDARY" "mainstage" "\"mainstage\", \"core\", \"liveact\""
+add_dj "Eric Prydz" "Eric Sheridan Prydz" "Swedish" "The visionary behind Pryda, Cirez D, and his epic HOLO show. A true innovator in progressive electronic music." "\"Progressive House\", \"Techno\", \"Ambient\", \"Melodic Techno\"" "Mouseville Records" 2005 12 20 "LEGENDARY" "mainstage" "\"mainstage\", \"core\", \"liveact\""
 
-add_dj "Ferry Corsten" "Ferry Corsten" "Dutch" "Dutch trance legend known for his uplifting sound and Flashover Recordings label." "\"Trance\", \"Uplifting Trance\", \"Progressive Trance\", \"Vocal Trance\"" "Flashover Recordings" 1999 8 25 "COMMON" "mainstage" "\"asot\""
+add_dj "Ferry Corsten" "Ferry Corsten" "Dutch" "Dutch trance legend known for his uplifting sound and Flashover Recordings label." "\"Trance\", \"Uplifting Trance\", \"Progressive Trance\", \"Vocal Trance\"" "Flashover Recordings" 2005 8 25 "COMMON" "mainstage" "\"asot\""
 
 add_dj "Fisher" "Paul Nicholas Fisher" "Australian" "The tech house superstar known for his high-energy sets and viral hits. A rising star in the house music scene." "\"Tech House\", \"Deep House\", \"Minimal House\", \"Bass House\"" "Catch & Release" 2018 5 6 "RARE" "mainstage" "\"elixir\""
 
