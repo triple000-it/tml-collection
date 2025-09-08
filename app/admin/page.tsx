@@ -89,19 +89,8 @@ export default function AdminPage() {
     loadDashboardData();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Set up periodic refresh for real-time-like updates
-  useEffect(() => {
-    // Refresh data every 30 seconds to simulate real-time updates
-    const refreshInterval = setInterval(() => {
-      console.log('Refreshing dashboard data...');
-      loadDashboardData();
-    }, 30000); // 30 seconds
-
-    // Cleanup interval on unmount
-    return () => {
-      clearInterval(refreshInterval);
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Removed automatic refresh for better performance
+  // Data will be refreshed only when needed (after create/update/delete operations)
 
   const loadDashboardData = async () => {
     setLoading(true);

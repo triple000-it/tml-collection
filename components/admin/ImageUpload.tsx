@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 // import { createClient } from '@supabase/supabase-js';
 
@@ -30,6 +30,13 @@ export default function ImageUpload({
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentImageUrl || null);
+
+  // Update preview when currentImageUrl changes
+  useEffect(() => {
+    if (currentImageUrl && currentImageUrl !== previewUrl) {
+      setPreviewUrl(currentImageUrl);
+    }
+  }, [currentImageUrl, previewUrl]);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,14 +57,14 @@ export default function ImageUpload({
       return;
     }
 
-    // Create preview
+    // Create preview immediately
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreviewUrl(e.target?.result as string);
     };
     reader.readAsDataURL(file);
 
-    // Upload file
+    // Upload file (this will update the preview with the server URL)
     uploadFile(file);
   };
 
@@ -141,6 +148,10 @@ export default function ImageUpload({
                 alt={`${label} preview`}
                 fill
                 className="object-cover"
+                onError={(e) => {
+                  console.error('Image load error:', previewUrl, e);
+                  setPreviewUrl(null);
+                }}
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
                 <button
@@ -160,7 +171,7 @@ export default function ImageUpload({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <p className="text-gray-400 text-sm text-center">
-                Click to upload {label.toLowerCase()}
+                {isUploading ? 'Uploading...' : `Click to upload ${label.toLowerCase()}`}
               </p>
               <p className="text-gray-500 text-xs mt-1">
                 Max {maxSize}MB • JPEG, PNG, WebP, SVG

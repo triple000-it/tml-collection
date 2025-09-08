@@ -41,7 +41,7 @@ const mockDjs = [
     genres: ['Big Room', 'Progressive House', 'Future Bass', 'Electro House'],
     total_appearances: 12,
     years_active: 11,
-    image_url: '/dj-images/martin-garrix.jpg',
+    image_url: '/cards/FRONT.png',
     rarity: 'LEGENDARY',
     biography: 'Dutch DJ and producer who became the youngest DJ to reach #1 in DJ Mag Top 100 at age 17. Known for his melodic big room sound and massive festival performances.',
     first_tomorrowland_year: 2014,
@@ -59,7 +59,7 @@ const mockDjs = [
     genres: ['Trance', 'Progressive House', 'Uplifting Trance', 'Psytrance'],
     total_appearances: 18,
     years_active: 19,
-    image_url: '/dj-images/armin-van-buuren.jpg',
+    image_url: '/cards/FRONT.png',
     rarity: 'LEGENDARY',
     biography: 'Dutch trance legend and producer, host of the iconic A State of Trance radio show. Known as the "King of Trance" with over 20 years of experience.',
     first_tomorrowland_year: 2005,
@@ -77,7 +77,7 @@ const mockDjs = [
     genres: ['Big Room', 'Progressive House', 'Electro House', 'Future Rave'],
     total_appearances: 8,
     years_active: 13,
-    image_url: '/dj-images/hardwell.jpg',
+    image_url: '/cards/FRONT.png',
     rarity: 'EPIC',
     biography: 'Dutch DJ and producer, founder of Revealed Recordings. Known for his energetic big room sound and spectacular live performances with incredible stage production.',
     first_tomorrowland_year: 2012,
@@ -95,7 +95,7 @@ const mockDjs = [
     genres: ['Big Room', 'Electro House', 'Future Bass', 'Trap'],
     total_appearances: 9,
     years_active: 14,
-    image_url: '/dj-images/afrojack.jpg',
+    image_url: '/cards/FRONT.png',
     rarity: 'EPIC',
     biography: 'Dutch DJ and producer, founder of Wall Recordings. Known for his distinctive sound and collaborations with major pop artists. Pioneer of the Dutch house movement.',
     first_tomorrowland_year: 2010,
@@ -113,7 +113,7 @@ const mockDjs = [
     genres: ['Future House', 'Progressive House', 'Future Bass', 'Trap'],
     total_appearances: 4,
     years_active: 8,
-    image_url: '/dj-images/don-diablo.jpg',
+    image_url: '/cards/FRONT.png',
     rarity: 'RARE',
     biography: 'Dutch DJ and producer, pioneer of the future house genre. Known for his innovative sound design and cinematic approach to electronic music production.',
     first_tomorrowland_year: 2017,
@@ -131,7 +131,7 @@ const mockDjs = [
     genres: ['Techno', 'Industrial Techno', 'Dark Techno', 'Acid Techno'],
     total_appearances: 1,
     years_active: 5,
-    image_url: '/dj-images/charlotte-de-witte.jpg',
+    image_url: '/cards/FRONT.png',
     rarity: 'COMMON',
     biography: 'Belgian techno DJ and producer, founder of KNTXT label. Rising star in the techno scene known for her dark, industrial sound and powerful performances.',
     first_tomorrowland_year: 2018,
@@ -146,12 +146,13 @@ const mockDjs = [
 
 export async function GET() {
   try {
-    // If Supabase is not configured, return empty array
+    // Check if Supabase is configured
     if (!supabaseAdmin) {
-      console.log('Supabase not configured, returning empty array');
-      return NextResponse.json({ data: [] });
+      console.error('Supabase admin client not configured');
+      return NextResponse.json({ error: 'Database not configured' }, { status: 503 });
     }
 
+    console.log('Fetching DJs from Supabase database...');
     const { data, error } = await supabaseAdmin
       .from('djs')
       .select('*')
@@ -163,7 +164,17 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     
-    return NextResponse.json({ data: data || [] });
+    // Map database fields to frontend interface
+    const mappedData = data?.map(dj => ({
+      ...dj,
+      first_tomorrowland_year: dj.debut_year, // Map debut_year to first_tomorrowland_year
+      // Ensure image_url is properly formatted
+      image_url: dj.image_url || null,
+      back_image_url: dj.back_image_url || null
+    })) || [];
+    
+    console.log(`✅ Successfully loaded ${mappedData.length} DJs from database`);
+    return NextResponse.json({ data: mappedData });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -178,14 +189,18 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     
+    // Map frontend fields to database fields
+    const dbData = {
+      ...body,
+      debut_year: body.first_tomorrowland_year, // Map first_tomorrowland_year to debut_year
+      is_active: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
     const { data, error } = await supabaseAdmin
       .from('djs')
-      .insert({
-        ...body,
-        is_active: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      })
+      .insert(dbData)
       .select();
     
     if (error) {
@@ -193,7 +208,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     
-    return NextResponse.json({ data: data?.[0] });
+    // Map response back to frontend format
+    const mappedData = data?.[0] ? {
+      ...data[0],
+      first_tomorrowland_year: data[0].debut_year,
+      image_url: data[0].image_url || null,
+      back_image_url: data[0].back_image_url || null
+    } : null;
+    
+    return NextResponse.json({ data: mappedData });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -209,12 +232,16 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { id, ...updateData } = body;
     
+    // Map frontend fields to database fields
+    const dbData = {
+      ...updateData,
+      debut_year: updateData.first_tomorrowland_year, // Map first_tomorrowland_year to debut_year
+      updated_at: new Date().toISOString()
+    };
+    
     const { data, error } = await supabaseAdmin
       .from('djs')
-      .update({
-        ...updateData,
-        updated_at: new Date().toISOString()
-      })
+      .update(dbData)
       .eq('id', id)
       .select();
     
@@ -223,7 +250,15 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     
-    return NextResponse.json({ data: data?.[0] });
+    // Map response back to frontend format
+    const mappedData = data?.[0] ? {
+      ...data[0],
+      first_tomorrowland_year: data[0].debut_year,
+      image_url: data[0].image_url || null,
+      back_image_url: data[0].back_image_url || null
+    } : null;
+    
+    return NextResponse.json({ data: mappedData });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

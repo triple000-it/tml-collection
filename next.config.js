@@ -19,6 +19,7 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+    domains: ['localhost'],
     qualities: [25, 50, 75, 100],
   },
   
