@@ -126,6 +126,29 @@ export default function AdminPage() {
       console.log('✅ Loaded', result.data?.length || 0, 'DJs from database');
       setDatabaseStatus('connected');
       setDjs(result.data || []);
+      
+      // Update editingDj if it exists to reflect any changes
+      if (editingDj) {
+        const updatedDj = result.data?.find((dj: DjData) => dj.id === editingDj.id);
+        if (updatedDj) {
+          setEditingDj(updatedDj);
+          setDjFormData({
+            stage_name: updatedDj.stage_name,
+            real_name: updatedDj.real_name || '',
+            nationality: updatedDj.nationality,
+            genres: updatedDj.genres,
+            biography: updatedDj.biography || '',
+            first_tomorrowland_year: updatedDj.first_tomorrowland_year,
+            record_label: updatedDj.record_label || '',
+            rarity: updatedDj.rarity,
+            total_appearances: updatedDj.total_appearances,
+            years_active: updatedDj.years_active,
+            categories: updatedDj.categories || ['mainstage'],
+            image_url: updatedDj.image_url || '',
+            back_image_url: updatedDj.back_image_url || ''
+          });
+        }
+      }
     } catch (error) {
       console.error('API connection failed:', error);
       setDjs([]);
@@ -757,7 +780,11 @@ export default function AdminPage() {
                         djId={editingDj?.id || ''}
                         imageType="front"
                         currentImageUrl={djFormData.image_url}
-                        onImageUpdate={(url) => setDjFormData({...djFormData, image_url: url})}
+                        onImageUpdate={async (url) => {
+                          setDjFormData({...djFormData, image_url: url});
+                          // Refresh the DJ list to show updated data
+                          await loadDjs();
+                        }}
                         label="Front Image"
                         aspectRatio="1/1"
                         maxSize={10}

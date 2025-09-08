@@ -33,8 +33,8 @@ export default function ImageUpload({
 
   // Update preview when currentImageUrl changes
   useEffect(() => {
-    if (currentImageUrl && currentImageUrl !== previewUrl) {
-      setPreviewUrl(currentImageUrl);
+    if (currentImageUrl !== previewUrl) {
+      setPreviewUrl(currentImageUrl || null);
     }
   }, [currentImageUrl, previewUrl]);
   const [error, setError] = useState<string | null>(null);
