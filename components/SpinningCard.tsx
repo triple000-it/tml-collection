@@ -40,6 +40,8 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
   const [showPopup, setShowPopup] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [backImageError, setBackImageError] = useState(false);
 
   const getRarityStyles = (rarity: string) => {
     switch (rarity) {
@@ -158,7 +160,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                 filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5))'
               }}
             >
-              {djData.image_url && (
+              {djData.image_url && djData.image_url !== 'NULL' && !imageError ? (
                 <Image
                   src={djData.image_url}
                   alt={djData.stage_name}
@@ -166,11 +168,16 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   className="object-contain"
                   sizes="361px"
                   priority
+                  onError={() => setImageError(true)}
                 />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                  <div className="text-6xl">🎵</div>
+                </div>
               )}
             </div>
 
-            {djData.back_image_url && (
+            {djData.back_image_url && djData.back_image_url !== 'NULL' && !backImageError && (
               <div 
                 className="absolute inset-0 w-full h-full"
                 style={{ 
@@ -186,6 +193,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   className="object-contain"
                   sizes="361px"
                   priority
+                  onError={() => setBackImageError(true)}
                 />
               </div>
             )}
@@ -247,7 +255,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                 transform: 'rotateY(0deg)'
               }}
             >
-              {djData.image_url ? (
+              {djData.image_url && djData.image_url !== 'NULL' && !imageError ? (
                 <Image
                   src={djData.image_url}
                   alt={djData.stage_name}
@@ -255,6 +263,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   className="object-contain"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority
+                  onError={() => setImageError(true)}
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
@@ -267,7 +276,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
 
             {/* Back Image */}
-            {djData.back_image_url && (
+            {djData.back_image_url && djData.back_image_url !== 'NULL' && !backImageError && (
               <div
                 className="absolute inset-0 w-full h-full"
                 style={{
@@ -282,6 +291,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   className="object-contain"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority
+                  onError={() => setBackImageError(true)}
                 />
                 {/* Image Overlay for back */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
