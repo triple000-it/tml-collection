@@ -103,6 +103,8 @@ export default function ImageUpload({
   const handleRemoveImage = async () => {
     if (!currentImageUrl) return;
 
+    console.log('ImageUpload: handleRemoveImage called', { djId, imageType, currentImageUrl });
+
     try {
       // Update the DJ record to set the image URL to null
       const updateData: any = { id: djId };
@@ -113,6 +115,8 @@ export default function ImageUpload({
         updateData.back_image_url = null;
       }
 
+      console.log('ImageUpload: Sending update data', updateData);
+
       const response = await fetch('/api/admin/djs/', {
         method: 'PUT',
         headers: {
@@ -122,17 +126,20 @@ export default function ImageUpload({
       });
 
       const result = await response.json();
+      console.log('ImageUpload: API response', { response: response.ok, result });
 
       if (response.ok && result.data) {
+        console.log('ImageUpload: Success, updating preview and calling onImageUpdate');
         setPreviewUrl(null);
         onImageUpdate('');
         setError(null);
       } else {
+        console.log('ImageUpload: API error', result.error);
         setError(result.error || 'Delete failed');
       }
     } catch (err) {
+      console.error('ImageUpload: Delete error:', err);
       setError('Delete failed. Please try again.');
-      console.error('Delete error:', err);
     }
   };
 

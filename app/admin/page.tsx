@@ -781,9 +781,11 @@ export default function AdminPage() {
                         imageType="front"
                         currentImageUrl={djFormData.image_url}
                         onImageUpdate={async (url) => {
+                          console.log('Admin: onImageUpdate called', { url, editingDj: editingDj?.id });
                           setDjFormData({...djFormData, image_url: url});
                           // Refresh the DJ list to show updated data
                           await loadDjs();
+                          console.log('Admin: loadDjs completed');
                         }}
                         label="Front Image"
                         aspectRatio="1/1"
