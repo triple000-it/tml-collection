@@ -107,7 +107,7 @@ export default function ImageUpload({
 
     try {
       // Update the DJ record to set the image URL to null
-      const updateData: any = { id: djId };
+      const updateData: { id: string; image_url?: null; back_image_url?: null } = { id: djId };
       
       if (imageType === 'front') {
         updateData.image_url = null;

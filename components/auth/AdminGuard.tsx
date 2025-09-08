@@ -103,7 +103,7 @@ export default function AdminGuard({ children }: AdminGuardProps) {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <p className="text-white">Checking admin privileges...</p>
           <p className="text-gray-400 text-sm mt-2">Loading: {loading ? 'true' : 'false'}, Checking: {checkingAdmin ? 'true' : 'false'}</p>
-          <p className="text-gray-500 text-xs mt-1">User: {user ? user.email : 'None'}</p>
+          <p className="text-gray-500 text-xs mt-1">User: {user?.email || 'None'}</p>
         </div>
       </div>
     );
@@ -122,7 +122,7 @@ export default function AdminGuard({ children }: AdminGuardProps) {
               <div className="space-y-2 text-sm">
                 <p className="text-gray-300">Loading: {loading ? 'true' : 'false'}</p>
                 <p className="text-gray-300">Checking Admin: {checkingAdmin ? 'true' : 'false'}</p>
-                <p className="text-gray-300">User: {user ? user.email : 'None'}</p>
+                <p className="text-gray-300">User: None</p>
                 <p className="text-gray-300">Is Admin: {isAdmin ? 'true' : 'false'}</p>
               </div>
               <div className="mt-6">

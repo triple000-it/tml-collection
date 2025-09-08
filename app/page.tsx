@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import DjCard from '@/components/DjCard';
 import SpinningCard from '@/components/SpinningCard';
 import AudioPlayer from '@/components/AudioPlayer';
 import AuthModal from '@/components/auth/AuthModal';
