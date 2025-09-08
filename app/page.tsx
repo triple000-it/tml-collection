@@ -28,8 +28,9 @@ interface DjData {
   categories: string[];
 }
 
+
 export default function HomePage() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [djs, setDjs] = useState<DjData[]>([]);
   const [selectedRarity, setSelectedRarity] = useState<string>('ALL');
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,115 +53,6 @@ export default function HomePage() {
     }
   };
 
-  // Mock data for demonstration
-  const mockDjs: DjData[] = [
-    {
-      id: 'dimitri-vegas-like-mike',
-      stage_name: 'Dimitri Vegas & Like Mike',
-      nationality: 'Belgian',
-      genres: ['Big Room', 'Progressive House', 'Electro House', 'Future Rave'],
-      total_appearances: 15,
-      years_active: 14,
-      image_url: '/cards/FRONT.png',
-      back_image_url: '/cards/BACK.png',
-      rarity: 'LEGENDARY',
-      biography: 'Belgian DJ duo and brothers known for their explosive energy and Tomorrowland residency. They have headlined major festivals worldwide and are recognized for their crowd interaction and festival anthems.',
-      first_tomorrowland_year: 2005,
-      record_label: 'Smash The House',
-      awards: ['DJ Mag Top 100 #1 (2015, 2019)', 'Tomorrowland Residents', 'Best Festival Performance 2018'],
-      categories: ['mainstage']
-    },
-    {
-      id: 'martin-garrix',
-      stage_name: 'Martin Garrix',
-      nationality: 'Dutch',
-      genres: ['Big Room', 'Progressive House', 'Future Bass', 'Electro House'],
-      total_appearances: 12,
-      years_active: 11,
-      image_url: '/dj-images/martin-garrix.jpg',
-      rarity: 'LEGENDARY',
-      biography: 'Dutch DJ and producer who became the youngest DJ to reach #1 in DJ Mag Top 100 at age 17. Known for his melodic big room sound and massive festival performances.',
-      first_tomorrowland_year: 2014,
-      record_label: 'STMPD RCRDS',
-      awards: ['DJ Mag Top 100 #1 (2016, 2017, 2018)', 'Tomorrowland Residents', 'Youngest #1 DJ Ever'],
-      categories: ['mainstage']
-    },
-    {
-      id: 'armin-van-buuren',
-      stage_name: 'Armin van Buuren',
-      nationality: 'Dutch',
-      genres: ['Trance', 'Progressive House', 'Uplifting Trance', 'Psytrance'],
-      total_appearances: 18,
-      years_active: 19,
-      image_url: '/dj-images/armin-van-buuren.jpg',
-      rarity: 'LEGENDARY',
-      biography: 'Dutch trance legend and producer, host of the iconic A State of Trance radio show. Known as the "King of Trance" with over 20 years of experience.',
-      first_tomorrowland_year: 2005,
-      record_label: 'Armada Music',
-      awards: ['DJ Mag Top 100 #1 (2007-2010, 2012)', 'Tomorrowland Legends', 'Trance Hall of Fame'],
-      categories: ['mainstage', 'asot']
-    },
-    {
-      id: 'hardwell',
-      stage_name: 'Hardwell',
-      nationality: 'Dutch',
-      genres: ['Big Room', 'Progressive House', 'Electro House', 'Future Rave'],
-      total_appearances: 8,
-      years_active: 13,
-      image_url: '/dj-images/hardwell.jpg',
-      rarity: 'EPIC',
-      biography: 'Dutch DJ and producer, founder of Revealed Recordings. Known for his energetic big room sound and spectacular live performances with incredible stage production.',
-      first_tomorrowland_year: 2012,
-      record_label: 'Revealed Recordings',
-      awards: ['DJ Mag Top 100 #1 (2013, 2014)', 'Best Big Room Producer', 'Ultra Music Festival Headliner'],
-      categories: ['mainstage']
-    },
-    {
-      id: 'afrojack',
-      stage_name: 'Afrojack',
-      nationality: 'Dutch',
-      genres: ['Big Room', 'Electro House', 'Future Bass', 'Trap'],
-      total_appearances: 9,
-      years_active: 14,
-      image_url: '/dj-images/afrojack.jpg',
-      rarity: 'EPIC',
-      biography: 'Dutch DJ and producer, founder of Wall Recordings. Known for his distinctive sound and collaborations with major pop artists. Pioneer of the Dutch house movement.',
-      first_tomorrowland_year: 2010,
-      record_label: 'Wall Recordings',
-      awards: ['DJ Mag Top 100 #8 (2011)', 'Grammy Winner', 'Best Dutch DJ 2015'],
-      categories: ['mainstage']
-    },
-    {
-      id: 'don-diablo',
-      stage_name: 'Don Diablo',
-      nationality: 'Dutch',
-      genres: ['Future House', 'Progressive House', 'Future Bass', 'Trap'],
-      total_appearances: 4,
-      years_active: 8,
-      image_url: '/dj-images/don-diablo.jpg',
-      rarity: 'RARE',
-      biography: 'Dutch DJ and producer, pioneer of the future house genre. Known for his innovative sound design and cinematic approach to electronic music production.',
-      first_tomorrowland_year: 2017,
-      record_label: 'Hexagon',
-      awards: ['DJ Mag Top 100 #11 (2018)', 'Future House Pioneer', 'Best New Artist 2017'],
-      categories: ['elixir']
-    },
-    {
-      id: 'charlotte-de-witte',
-      stage_name: 'Charlotte de Witte',
-      nationality: 'Belgian',
-      genres: ['Techno', 'Industrial Techno', 'Dark Techno', 'Acid Techno'],
-      total_appearances: 1,
-      years_active: 5,
-      image_url: '/dj-images/charlotte-de-witte.jpg',
-      rarity: 'COMMON',
-      biography: 'Belgian techno DJ and producer, founder of KNTXT label. Rising star in the techno scene known for her dark, industrial sound and powerful performances.',
-      first_tomorrowland_year: 2018,
-      record_label: 'KNTXT',
-      awards: ['DJ Mag Top 100 #13 (2020)', 'Best Techno DJ 2021', 'Rising Star Award'],
-      categories: ['core']
-    }
-  ];
 
   // Fisher-Yates shuffle algorithm for randomizing array
   const shuffleArray = (array: DjData[]) => {
@@ -177,28 +69,30 @@ export default function HomePage() {
       setLoading(true);
       try {
         const response = await fetch('/api/admin/djs/');
-        const result = await response.json();
         
-        if (response.ok && result.data && result.data.length > 0) {
-          console.log('✅ Loaded', result.data.length, 'DJs from database');
-          // Shuffle the DJs randomly on each load
-          setDjs(shuffleArray(result.data));
+        if (response.ok) {
+          const result = await response.json();
+          if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+            console.log('✅ Loaded', result.data.length, 'DJs from database');
+            setDjs(shuffleArray(result.data));
+          } else {
+            console.log('No DJs found in database');
+            setDjs([]);
+          }
         } else {
-          console.log('Using mock data - API returned:', result.data?.length || 0, 'DJs');
-          // Fallback to mock data if API fails
-          setDjs(shuffleArray(mockDjs));
+          console.log('API response not ok:', response.status);
+          setDjs([]);
         }
       } catch (error) {
         console.error('Error fetching DJs:', error);
-        // Fallback to mock data if API fails
-        setDjs(shuffleArray(mockDjs));
+        setDjs([]);
       } finally {
         setLoading(false);
       }
     };
-
+    
     fetchDjs();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -348,17 +242,17 @@ export default function HomePage() {
       </section>
 
       {/* Collection Section */}
-      <section id="collections" className="py-20 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="collections" className="bg-black">
+        <div className="max-w-7xl mx-auto">
           {/* Section Header */}
-          <div className="mb-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
               Collections
             </h2>
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center items-center">
+          <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-12">
             {/* Search */}
             <div className="relative w-80">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -414,20 +308,15 @@ export default function HomePage() {
 
         {/* DJ Cards Grid - Full Width */}
         {!loading && (
-          <div className="w-full mt-16">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
             <div className="dj-grid">
               {filteredDjs.map((dj, index) => (
-                <div 
+                <SpinningCard 
                   key={dj.id} 
+                  djData={dj} 
                   className="card-hover"
                   style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  {dj.id === 'dimitri-vegas-like-mike' ? (
-                    <SpinningCard djData={dj} />
-                  ) : (
-                    <DjCard djData={dj} />
-                  )}
-                </div>
+                />
               ))}
             </div>
           </div>

@@ -15,6 +15,7 @@ export interface DJ {
   total_appearances: number
   years_active: number
   image_url?: string
+  back_image_url?: string
   rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY'
   rarity_percentage: number
   record_label?: string

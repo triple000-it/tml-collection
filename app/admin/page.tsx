@@ -190,14 +190,17 @@ export default function AdminPage() {
 
   const handleDjSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted!', { editingDj, djFormData });
     setUploading(true);
     
     try {
-      const url = editingDj ? '/api/admin/djs' : '/api/admin/djs';
+      const url = editingDj ? '/api/admin/djs/' : '/api/admin/djs/';
       const method = editingDj ? 'PUT' : 'POST';
       const body = editingDj 
         ? { id: editingDj.id, ...djFormData }
         : djFormData;
+      
+      console.log('Sending request:', { url, method, body });
       
       const response = await fetch(url, {
         method,
@@ -207,7 +210,9 @@ export default function AdminPage() {
         body: JSON.stringify(body),
       });
       
+      console.log('Response status:', response.status);
       const result = await response.json();
+      console.log('Response data:', result);
       
       if (!response.ok) {
         console.error('API error:', result.error);

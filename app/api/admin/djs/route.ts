@@ -170,7 +170,7 @@ export async function GET() {
       first_tomorrowland_year: dj.debut_year, // Map debut_year to first_tomorrowland_year
       // Ensure image_url is properly formatted
       image_url: dj.image_url || null,
-      back_image_url: dj.back_image_url || null
+      back_image_url: dj.back_image_url || '/cards/BACK.png' // Default to back card image
     })) || [];
     
     console.log(`✅ Successfully loaded ${mappedData.length} DJs from database`);
@@ -198,6 +198,9 @@ export async function POST(request: NextRequest) {
       updated_at: new Date().toISOString()
     };
     
+    // Remove first_tomorrowland_year from dbData since it doesn't exist in database
+    delete dbData.first_tomorrowland_year;
+    
     const { data, error } = await supabaseAdmin
       .from('djs')
       .insert(dbData)
@@ -213,7 +216,7 @@ export async function POST(request: NextRequest) {
       ...data[0],
       first_tomorrowland_year: data[0].debut_year,
       image_url: data[0].image_url || null,
-      back_image_url: data[0].back_image_url || null
+      back_image_url: data[0].back_image_url || '/cards/BACK.png'
     } : null;
     
     return NextResponse.json({ data: mappedData });
@@ -239,6 +242,9 @@ export async function PUT(request: NextRequest) {
       updated_at: new Date().toISOString()
     };
     
+    // Remove first_tomorrowland_year from dbData since it doesn't exist in database
+    delete dbData.first_tomorrowland_year;
+    
     const { data, error } = await supabaseAdmin
       .from('djs')
       .update(dbData)
@@ -255,7 +261,7 @@ export async function PUT(request: NextRequest) {
       ...data[0],
       first_tomorrowland_year: data[0].debut_year,
       image_url: data[0].image_url || null,
-      back_image_url: data[0].back_image_url || null
+      back_image_url: data[0].back_image_url || '/cards/BACK.png'
     } : null;
     
     return NextResponse.json({ data: mappedData });

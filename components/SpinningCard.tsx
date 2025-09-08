@@ -27,12 +27,14 @@ interface SpinningCardProps {
   djData: DjData;
   onClick?: () => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const SpinningCard: React.FC<SpinningCardProps> = ({
   djData,
   onClick,
-  className = ''
+  className = '',
+  style
 }) => {
 
   const [showPopup, setShowPopup] = useState(false);
@@ -106,6 +108,14 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
 
   const resetRotation = () => {
     setIsFlipped(false);
+  };
+
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      openPopup();
+    }
   };
 
   // Portal popup component
@@ -207,8 +217,8 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
   return (
     <>
       <div 
-        className={`relative w-full max-w-sm mx-auto bg-black border border-gray-800 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${rarityStyles.glow} ${className}`}
-        onClick={onClick}
+        className={`relative w-full bg-black border border-gray-800 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${rarityStyles.glow} ${className}`}
+        style={style}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -220,15 +230,15 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
           </div>
         </div>
 
-          <div
-            className="relative h-80 bg-gray-900"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: isHovered ? 'rotateY(180deg)' : 'rotateY(0deg)',
-              transition: 'transform 0.6s ease-in-out'
-            }}
-            onClick={openPopup}
-          >
+        <div
+          className="relative h-[500px] bg-gray-900 cursor-pointer"
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: isHovered || isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transition: 'transform 0.6s ease-in-out'
+          }}
+          onClick={handleCardClick}
+        >
             {/* Front Image */}
             <div
               className="absolute inset-0 w-full h-full"
@@ -242,7 +252,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   src={djData.image_url}
                   alt={djData.stage_name}
                   fill
-                  className="object-contain cursor-pointer"
+                  className="object-contain"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority
                 />
@@ -269,7 +279,7 @@ const SpinningCard: React.FC<SpinningCardProps> = ({
                   src={djData.back_image_url}
                   alt={`${djData.stage_name} - Back`}
                   fill
-                  className="object-contain cursor-pointer"
+                  className="object-contain"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority
                 />
